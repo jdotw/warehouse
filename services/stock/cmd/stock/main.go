@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	serviceName := "openapi"
+	serviceName := "stock"
 
 	// Logging and Tracing
 	logger, metricsFactory := log.Init(serviceName)
