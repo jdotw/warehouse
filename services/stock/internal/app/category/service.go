@@ -11,7 +11,7 @@ import (
 type Service interface {
 	GetCategories(ctx context.Context) (*[]Category, error)
 	CreateCategory(ctx context.Context, category *Category) (*Category, error)
-	DeleteCategory(ctx context.Context) error
+	DeleteCategory(ctx context.Context, categoryID string) error
 	GetCategory(ctx context.Context, categoryID string) (*Category, error)
 	UpdateCategory(ctx context.Context, category *Category) (*Category, error)
 }
@@ -40,8 +40,8 @@ func (f *service) CreateCategory(ctx context.Context, category *Category) (*Cate
 	return v, err
 }
 
-func (f *service) DeleteCategory(ctx context.Context) error {
-	v, err := f.repository.DeleteCategory(ctx)
+func (f *service) DeleteCategory(ctx context.Context, categoryID string) error {
+	v, err := f.repository.DeleteCategory(ctx, categoryID)
 	return v, err
 }
 
