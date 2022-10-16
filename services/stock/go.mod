@@ -1,6 +1,6 @@
-module github.com/jdotw/warehouse/services/stock
+module github.com/jdotw/stock
 
-go 1.19
+go 1.17
 
 require (
 	github.com/go-kit/kit v0.12.0

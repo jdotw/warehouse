@@ -5,11 +5,11 @@ import (
 	_ "embed"
 	"encoding/json"
 
+	"github.com/go-kit/kit/endpoint"
+	kittracing "github.com/go-kit/kit/tracing/opentracing"
 	"github.com/jdotw/go-utils/authn/jwt"
 	"github.com/jdotw/go-utils/authz/opa"
 	"github.com/jdotw/go-utils/log"
-	"github.com/go-kit/kit/endpoint"
-	kittracing "github.com/go-kit/kit/tracing/opentracing"
 	"github.com/opentracing/opentracing-go"
 )
 

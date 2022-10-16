@@ -6,11 +6,11 @@ import (
 	"encoding/json"
 	"net/http"
 
+	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/gorilla/mux"
 	"github.com/jdotw/go-utils/authn/jwt"
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/transport"
-	httptransport "github.com/go-kit/kit/transport/http"
-	"github.com/gorilla/mux"
 	"github.com/opentracing/opentracing-go"
 )
 

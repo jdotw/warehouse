@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/jdotw/go-utils/log"
+	"github.com/jdotw/go-utils/recorderrors"
 	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"

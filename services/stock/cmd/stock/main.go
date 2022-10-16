@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"os"
 
-	categoryapp "github.com/jdotw/warehouse/services/stock/internal/app/category"
+	"github.com/gorilla/mux"
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/tracing"
-	"github.com/gorilla/mux"
+	categoryapp "github.com/jdotw/stock/internal/app/category"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 )

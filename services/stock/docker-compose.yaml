@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   stock:
-    build:
+    build: 
       context: .
       args:
         GITHUB_USER: ${GITHUB_USER}
@@ -31,9 +31,10 @@ services:
       - "--server"
       - "--log-level=debug"
       - "category/policies"
-
+      
     volumes:
       - ./category/policies:/category/policies
+      
 
 networks:
   stock_db:
