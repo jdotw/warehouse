@@ -11,13 +11,13 @@ import (
 
 // Category
 type Category struct {
-	ID   *string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id,omitempty"`
-	Name *string `gorm:"not null" json:"name,omitempty"`
+	ID   string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	Name string `gorm:"not null" json:"name"`
 }
 
 // Create Syrup Category
 type CreateCategoryRequest struct {
-	Name *string `json:"name,omitempty"`
+	Name string `json:"name"`
 }
 
 // HTTPError defines model for HTTPError.
