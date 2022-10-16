@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 
 	"github.com/jdotw/go-utils/authn/jwt"
+	"github.com/jdotw/go-utils/authz/opa"
 	"github.com/jdotw/go-utils/log"
 	"github.com/go-kit/kit/endpoint"
 	kittracing "github.com/go-kit/kit/tracing/opentracing"
