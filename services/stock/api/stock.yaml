@@ -144,12 +144,17 @@ components:
           type: string
           x-oapi-codegen-extra-tags:
             gorm: "not null"
+      required:
+        - id
+        - name
     CreateCategoryRequest:
       description: "Create Syrup Category"
       type: object
       properties:
         name:
           type: string
+      required:
+        - name
     # Errors
     HTTPError:
       type: object
