@@ -74,20 +74,16 @@ func NewEndpointSet(s Service, logger log.Factory, tracer opentracing.Tracer) En
 
 // GetCategories
 
-type GetCategoriesEndpointRequest struct {
-}
 
 func makeGetCategoriesEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		logger.For(ctx).Info("Category.GetCategoriesEndpoint received request")
 
-		er := request.(GetCategoriesEndpointRequest)
 		v, err := s.GetCategories(ctx)
 		if err != nil {
 			return &v, err
 		}
 		return &v, nil
-
 	}
 }
 
@@ -142,8 +138,12 @@ func makeDeleteCategoryEndpoint(s Service, logger log.Factory, tracer opentracin
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		logger.For(ctx).Info("Category.DeleteCategoryEndpoint received request")
 
-		// TODO: No response type could be determined, you'll need to write this yourself
-
+		er := request.(DeleteCategoryEndpointRequest)
+		err := s.DeleteCategory(ctx, er.CategoryID)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
 	}
 }
 
@@ -192,7 +192,7 @@ func makeUpdateCategoryEndpoint(s Service, logger log.Factory, tracer opentracin
 		json.Unmarshal(erJSON, &sr)
 
 		// Set variables from path parameters
-		sr.CategoryID = er.CategoryID
+		sr.ID = er.CategoryID
 
 		//
 		// TODO: Review the code above.
