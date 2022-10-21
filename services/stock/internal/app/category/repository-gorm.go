@@ -3,7 +3,6 @@ package category
 import (
 	"context"
 	_ "embed"
-	"errors"
 
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/recorderrors"
@@ -71,7 +70,7 @@ func (p *repository) CreateCategory(ctx context.Context, category *Category) (*C
 
 func (p *repository) DeleteCategory(ctx context.Context, categoryID string) error {
 	// TODO: Unable to generate code for this Operation
-	return nil, errors.New("Not Implemented")
+	return nil
 }
 
 func (p *repository) GetCategory(ctx context.Context, categoryID string) (*Category, error) {

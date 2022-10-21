@@ -65,9 +65,7 @@ func AddHTTPRoutes(r *mux.Router, endpoints EndpointSet, logger log.Factory, tra
 // GetCategories
 
 func decodeGetCategoriesEndpointRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var endpointRequest GetCategoriesEndpointRequest
-
-	return endpointRequest, nil
+	return nil, nil
 }
 
 // CreateCategory

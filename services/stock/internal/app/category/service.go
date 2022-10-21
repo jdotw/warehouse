@@ -41,8 +41,8 @@ func (f *service) CreateCategory(ctx context.Context, category *Category) (*Cate
 }
 
 func (f *service) DeleteCategory(ctx context.Context, categoryID string) error {
-	v, err := f.repository.DeleteCategory(ctx, categoryID)
-	return v, err
+	err := f.repository.DeleteCategory(ctx, categoryID)
+	return err
 }
 
 func (f *service) GetCategory(ctx context.Context, categoryID string) (*Category, error) {
