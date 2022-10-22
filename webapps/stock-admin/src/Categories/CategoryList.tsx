@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Alert, Button, Table } from "react-bootstrap";
 import Loading from "../components/Loading";
 import AddCategory from "./AddCategory";
 import "./CategoryList.css";
@@ -44,7 +44,6 @@ const CategoryList = () => {
       setCategories([]);
       setCategoryLoadError(error);
       setLoadingCategories(false);
-      alert("Failed to add category: " + error.message);
     }
   };
 
@@ -67,20 +66,24 @@ const CategoryList = () => {
         <Button onClick={() => setShowAdd(true)}>Create Category</Button>
       </div>
       {showAdd && <AddCategory onAdded={(err?: Error) => onAdded(err)} />}
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories!.map((c) => (
+      {categoryLoadError ? (
+        <div>Failed to load Categories: {categoryLoadError.message}</div>
+      ) : (
+        <Table striped bordered hover>
+          <thead>
             <tr>
-              <td>{c.name}</td>
+              <th>Name</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {categories!.map((c) => (
+              <tr>
+                <td>{c.name}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 };
