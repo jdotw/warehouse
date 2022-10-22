@@ -32,7 +32,7 @@ const AddCategory = () => {
 
       const response_json = await response.json();
       console.log("JSON: ", response_json);
-    } catch (error) {
+    } catch (error: any) {
       console.log("ERROR: ", error.message);
     }
 
