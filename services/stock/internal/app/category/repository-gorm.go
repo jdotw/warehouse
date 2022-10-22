@@ -67,15 +67,16 @@ func (p *repository) CreateCategory(ctx context.Context, category *Category) (*C
 }
 
 func (p *repository) DeleteCategory(ctx context.Context, categoryID string) error {
-	// TODO: Unable to generate code for this Operation
-	return nil
+	tx := p.db.WithContext(ctx).Delete(&Category{}, "id = ? ", categoryID)
+	if tx.RowsAffected == 0 {
+		return recorderrors.ErrNotFound
+	}
+	return tx.Error
 }
 
 func (p *repository) GetCategory(ctx context.Context, categoryID string) (*Category, error) {
 	var v Category
-	// TODO: Check the .First query as codegen is not able
-	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&Category{}).First(&v, "category_id = ? ", categoryID)
+	tx := p.db.WithContext(ctx).Model(&Category{}).First(&v, "id = ? ", categoryID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
@@ -84,7 +85,6 @@ func (p *repository) GetCategory(ctx context.Context, categoryID string) (*Categ
 
 func (p *repository) UpdateCategory(ctx context.Context, category *Category) (*Category, error) {
 	var v Category
-	// TODO: Check that the .Where query is appropriate
 	tx := p.db.WithContext(ctx).Model(&Category{}).Where("id = ?", category.ID).UpdateColumns(category)
 	if tx.RowsAffected == 0 {
 		return nil, recorderrors.ErrNotFound
