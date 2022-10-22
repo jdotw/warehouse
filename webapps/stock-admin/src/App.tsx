@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import "./App.css";
 
 function App() {
-  const { user, isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
   if (isLoading) {
     return <div>Loading ...</div>;

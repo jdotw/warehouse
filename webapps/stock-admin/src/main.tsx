@@ -16,6 +16,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     redirectUri={window.location.origin}
     useRefreshTokens={true}
     cacheLocation="localstorage"
+    scope="write:category"
+    audience="http://localhost:8080/"
   >
     <BrowserRouter>
       <Routes>
