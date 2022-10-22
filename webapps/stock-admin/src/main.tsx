@@ -1,12 +1,6 @@
-import React from "react";
+import { Auth0Provider } from "@auth0/auth0-react";
 import ReactDOM from "react-dom/client";
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  Route,
-  RouterProvider,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import AddCategory from "./Categories/AddCategory";
 import Categories from "./Categories/Categories";
@@ -16,16 +10,24 @@ import Home from "./Home/Home";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<Home />} />
-        <Route path="categories" element={<Categories />}>
-          <Route path=":categoryID" element={<Category />} />
-          <Route path="new" element={<AddCategory />} />
-          <Route index element={<CategoryList />} />
+  <Auth0Provider
+    domain="warehouse.au.auth0.com"
+    clientId="irEI1dVJObviJ67mZsYFEjP93EIlthys"
+    redirectUri={window.location.origin}
+    useRefreshTokens={true}
+    cacheLocation="localstorage"
+  >
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<Home />} />
+          <Route path="categories" element={<Categories />}>
+            <Route path=":categoryID" element={<Category />} />
+            <Route path="new" element={<AddCategory />} />
+            <Route index element={<CategoryList />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
-  </BrowserRouter>
+      </Routes>
+    </BrowserRouter>
+  </Auth0Provider>
 );
