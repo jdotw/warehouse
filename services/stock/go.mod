@@ -6,7 +6,7 @@ require (
 	github.com/go-kit/kit v0.9.0
 	github.com/gorilla/mux v1.8.0
 	github.com/jdotw/codegen-go v0.0.0-20221016014155-fe260c778054
-	github.com/jdotw/go-utils v0.0.0-20221016004735-373c1d13b872
+	github.com/jdotw/go-utils v0.0.0-20221022032130-f91f85b8bba1
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/prometheus/client_golang v1.11.0
 	go.uber.org/zap v1.19.1
@@ -16,13 +16,14 @@ require (
 )
 
 require (
+	github.com/MicahParks/keyfunc v1.5.1 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
-	github.com/golang-jwt/jwt/v4 v4.2.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.13.0 // indirect
