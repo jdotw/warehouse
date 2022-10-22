@@ -9,6 +9,8 @@ import CategoryList from "./Categories/CategoryList";
 import Home from "./Home/Home";
 import "./index.css";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <Auth0Provider
     domain="warehouse.au.auth0.com"
