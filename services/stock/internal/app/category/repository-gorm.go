@@ -50,9 +50,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 func (p *repository) GetCategories(ctx context.Context) (*[]Category, error) {
 	var v []Category
-	// TODO: Check the .First query as codegen is not able
-	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&[]Category{}).First(&v, "")
+	tx := p.db.WithContext(ctx).Model(&[]Category{}).Find(&v)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
