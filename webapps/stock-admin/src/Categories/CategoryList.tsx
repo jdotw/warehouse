@@ -77,7 +77,7 @@ const CategoryList = () => {
           </thead>
           <tbody>
             {categories!.map((c) => (
-              <tr>
+              <tr key={c.id}>
                 <td>{c.name}</td>
               </tr>
             ))}
