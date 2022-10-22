@@ -3,9 +3,14 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const AddCategory = () => {
+type Props = {
+  onAdded: (error?: Error) => void;
+};
+
+const AddCategory = (props: Props) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [name, setName] = useState("");
+  const { onAdded } = props;
 
   const formSubmitted = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -32,8 +37,10 @@ const AddCategory = () => {
 
       const response_json = await response.json();
       console.log("JSON: ", response_json);
+      if (onAdded) onAdded();
     } catch (error: any) {
       console.log("ERROR: ", error.message);
+      if (onAdded) onAdded(error);
     }
 
     console.log("CLICKED");

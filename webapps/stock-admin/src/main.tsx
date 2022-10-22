@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     redirectUri={window.location.origin}
     useRefreshTokens={true}
     cacheLocation="localstorage"
-    scope="write:category"
+    scope="write:category read:category"
     audience="http://localhost:8080/"
   >
     <BrowserRouter>
@@ -27,7 +27,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           <Route index element={<Home />} />
           <Route path="categories" element={<Categories />}>
             <Route path=":categoryID" element={<Category />} />
-            <Route path="new" element={<AddCategory />} />
             <Route index element={<CategoryList />} />
           </Route>
         </Route>
