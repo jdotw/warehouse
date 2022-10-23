@@ -144,9 +144,12 @@ type DeleteItemEndpointRequest struct {
 func makeDeleteItemEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		logger.For(ctx).Info("Item.DeleteItemEndpoint received request")
-
-		// TODO: No response type could be determined, you'll need to write this yourself
-
+		er := request.(DeleteItemEndpointRequest)
+		err := s.DeleteItem(ctx, er.ItemID)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
 	}
 }
 
@@ -195,7 +198,7 @@ func makeUpdateItemEndpoint(s Service, logger log.Factory, tracer opentracing.Tr
 		json.Unmarshal(erJSON, &sr)
 
 		// Set variables from path parameters
-		sr.ItemID = er.ItemID
+		sr.ID = er.ItemID
 
 		//
 		// TODO: Review the code above.

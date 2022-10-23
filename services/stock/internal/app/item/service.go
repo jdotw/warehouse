@@ -11,7 +11,7 @@ import (
 type Service interface {
 	GetItemsInCategory(ctx context.Context, categoryID string) (*[]Item, error)
 	CreateItemInCategory(ctx context.Context, item *Item) (*Item, error)
-	DeleteItem(ctx context.Context) error
+	DeleteItem(ctx context.Context, itemID string) error
 	GetItem(ctx context.Context, itemID string) (*Item, error)
 	UpdateItem(ctx context.Context, item *Item) (*Item, error)
 }
@@ -40,9 +40,9 @@ func (f *service) CreateItemInCategory(ctx context.Context, item *Item) (*Item, 
 	return v, err
 }
 
-func (f *service) DeleteItem(ctx context.Context) error {
-	v, err := f.repository.DeleteItem(ctx)
-	return v, err
+func (f *service) DeleteItem(ctx context.Context, itemID string) error {
+	err := f.repository.DeleteItem(ctx, itemID)
+	return err
 }
 
 func (f *service) GetItem(ctx context.Context, itemID string) (*Item, error) {

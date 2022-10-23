@@ -3,7 +3,6 @@ package item
 import (
 	"context"
 	_ "embed"
-	"errors"
 
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/recorderrors"
@@ -53,7 +52,7 @@ func (p *repository) GetItemsInCategory(ctx context.Context, categoryID string) 
 	var v []Item
 	// TODO: Check the .First query as codegen is not able
 	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&[]Item{}).First(&v, "category_id = ? ", categoryID)
+	tx := p.db.WithContext(ctx).Model(&[]Item{}).Where(&v, "category_id = ? ", categoryID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
@@ -70,15 +69,16 @@ func (p *repository) CreateItemInCategory(ctx context.Context, item *Item) (*Ite
 }
 
 func (p *repository) DeleteItem(ctx context.Context, itemID string) error {
-	// TODO: Unable to generate code for this Operation
-	return nil, errors.New("Not Implemented")
+	tx := p.db.WithContext(ctx).Delete(&Item{}, "id = ? ", itemID)
+	if tx.RowsAffected == 0 {
+		return recorderrors.ErrNotFound
+	}
+	return tx.Error
 }
 
 func (p *repository) GetItem(ctx context.Context, itemID string) (*Item, error) {
 	var v Item
-	// TODO: Check the .First query as codegen is not able
-	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&Item{}).First(&v, "item_id = ? ", itemID)
+	tx := p.db.WithContext(ctx).Model(&Item{}).First(&v, "id = ? ", itemID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
@@ -87,7 +87,6 @@ func (p *repository) GetItem(ctx context.Context, itemID string) (*Item, error) 
 
 func (p *repository) UpdateItem(ctx context.Context, item *Item) (*Item, error) {
 	var v Item
-	// TODO: Check that the .Where query is appropriate
 	tx := p.db.WithContext(ctx).Model(&Item{}).Where("id = ?", item.ID).UpdateColumns(item)
 	if tx.RowsAffected == 0 {
 		return nil, recorderrors.ErrNotFound
