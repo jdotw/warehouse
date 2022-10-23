@@ -10,6 +10,7 @@ import (
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/tracing"
 	categoryapp "github.com/jdotw/stock/internal/app/category"
+	itemapp "github.com/jdotw/stock/internal/app/item"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 )
@@ -33,6 +34,17 @@ func main() {
 		service := categoryapp.NewService(repo, logger, tracer)
 		endPoints := categoryapp.NewEndpointSet(service, logger, tracer)
 		categoryapp.AddHTTPRoutes(r, endPoints, logger, tracer)
+	}
+
+	// Item Service
+	{
+		repo, err := itemapp.NewGormRepository(context.Background(), os.Getenv("POSTGRES_DSN"), logger, tracer)
+		if err != nil {
+			logger.Bg().Fatal("Failed to create itemapp repository", zap.Error(err))
+		}
+		service := itemapp.NewService(repo, logger, tracer)
+		endPoints := itemapp.NewEndpointSet(service, logger, tracer)
+		itemapp.AddHTTPRoutes(r, endPoints, logger, tracer)
 	}
 
 	// HTTP Mux
