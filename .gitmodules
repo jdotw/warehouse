@@ -1,0 +1,3 @@
+[submodule "services/codegen"]
+	path = services/codegen
+	url = git@github.com:jdotw/codegen-go.git

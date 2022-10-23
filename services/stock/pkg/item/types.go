@@ -24,6 +24,7 @@ type Item struct {
 	CategoryID string `gorm:"type:uuid;default:uuid_generate_v4();" json:"category_id"`
 	ID         string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
 	Name       string `gorm:"not null" json:"name"`
+	UPC        int    `gorm:"not null" json:"upc"`
 }
 
 // BadRequestError defines model for BadRequestError.

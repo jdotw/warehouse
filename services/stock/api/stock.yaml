@@ -293,10 +293,15 @@ components:
           type: string
           x-oapi-codegen-extra-tags:
             gorm: "not null"
+        upc:
+          type: integer
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
       required:
         - id
         - category_id
         - name
+        - upc
     CreateCategoryRequest:
       description: "Create Category"
       type: object
