@@ -1,6 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { SyntheticEvent, useEffect, useState } from "react";
 import { Alert, Button, Modal, Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import Loading from "../components/Loading";
 import AddCategory from "./AddCategory";
 import "./CategoryList.css";
@@ -123,7 +124,9 @@ const CategoryList = () => {
                 <tr key={c.id}>
                   <td>
                     <div className="CategoryRowContainer">
-                      <div className="CategoryName">{c.name}</div>
+                      <div className="CategoryName">
+                        <Link to={c.id}>{c.name}</Link>
+                      </div>
                       <Button variant="danger" onClick={() => deleteClicked(c)}>
                         Delete
                       </Button>
