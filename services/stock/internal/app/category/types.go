@@ -15,7 +15,7 @@ type Category struct {
 	Name string `gorm:"not null" json:"name"`
 }
 
-// Create Syrup Category
+// Create Category
 type CreateCategoryRequest struct {
 	Name string `json:"name"`
 }
@@ -40,7 +40,7 @@ type NotFoundError HTTPError
 // UnauthorizedError defines model for UnauthorizedError.
 type UnauthorizedError HTTPError
 
-// Create Syrup Category
+// Create Category
 type CreateCategory CreateCategoryRequest
 
 // Category
