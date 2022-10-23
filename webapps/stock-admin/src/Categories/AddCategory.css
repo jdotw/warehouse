@@ -1,0 +1,21 @@
+.Container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-top: 1px rgb(240, 240, 240) solid;
+  border-bottom: 1px rgb(240, 240, 240) solid;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.FieldRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.form-label {
+  margin-bottom: 0;
+  margin-right: 0.5em;
+}

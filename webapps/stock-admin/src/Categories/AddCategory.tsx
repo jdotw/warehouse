@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useAuth0 } from "@auth0/auth0-react";
+import "./AddCategory.css";
 
 type Props = {
   onAdded: (error?: Error) => void;
@@ -47,10 +48,10 @@ const AddCategory = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className="Container">
       <h2>Add New Category</h2>
       <Form onSubmit={formSubmitted}>
-        <Form.Group controlId="formCategoryName">
+        <Form.Group controlId="formCategoryName" className="FieldRow">
           <Form.Label>Name</Form.Label>
           <Form.Control
             placeholder="Category Name"
