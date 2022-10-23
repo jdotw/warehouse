@@ -14,7 +14,9 @@ import (
 )
 
 type repository struct {
-	db *gorm.DB
+	db     *gorm.DB
+	logger log.Factory
+	tracer opentracing.Tracer
 }
 
 func NewGormRepository(ctx context.Context, connString string, logger log.Factory, tracer opentracing.Tracer) (Repository, error) {
@@ -42,7 +44,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 			logger.For(ctx).Fatal("Failed to migrate db for type []Item", zap.Error(err))
 		}
 
-		r = &repository{db: db}
+		r = &repository{db: db, logger: logger, tracer: tracer}
 	}
 
 	return r, nil
@@ -50,12 +52,12 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 func (p *repository) GetItemsInCategory(ctx context.Context, categoryID string) (*[]Item, error) {
 	var v []Item
-	// TODO: Check the .First query as codegen is not able
-	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&[]Item{}).Where(&v, "category_id = ? ", categoryID)
+	p.logger.For(ctx).Info("Querying for items", zap.String("category_id", categoryID))
+	tx := p.db.WithContext(ctx).Find(&v, "category_id = ? ", categoryID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
+	p.logger.For(ctx).Info("Found items", zap.String("category_id", categoryID), zap.Int("count", len(v)))
 	return &v, tx.Error
 }
 

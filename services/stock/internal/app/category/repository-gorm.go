@@ -50,7 +50,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 func (p *repository) GetCategories(ctx context.Context) (*[]Category, error) {
 	var v []Category
-	tx := p.db.WithContext(ctx).Model(&[]Category{}).Find(&v)
+	tx := p.db.WithContext(ctx).Find(&v)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
