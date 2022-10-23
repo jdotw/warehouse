@@ -103,6 +103,7 @@ const Category = () => {
         <AddItem
           categoryID={category.id}
           onAdded={(err?: Error) => onAdded(err)}
+          onCancelled={() => setShowAdd(false)}
         />
       )}
       {itemLoadError ? (

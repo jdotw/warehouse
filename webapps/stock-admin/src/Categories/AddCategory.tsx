@@ -6,12 +6,13 @@ import "./AddCategory.css";
 
 type Props = {
   onAdded: (error?: Error) => void;
+  onCancelled: () => void;
 };
 
 const AddCategory = (props: Props) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [name, setName] = useState("");
-  const { onAdded } = props;
+  const { onAdded, onCancelled } = props;
 
   const formSubmitted = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -58,9 +59,18 @@ const AddCategory = (props: Props) => {
             onChange={(e) => setName(e.currentTarget.value)}
           />
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
+        <div className="ButtonContainer">
+          <Button
+            variant="secondary"
+            onClick={onCancelled}
+            className="CancelButton"
+          >
+            Cancel
+          </Button>
+          <Button variant="primary" type="submit" className="SubmitButton">
+            Submit
+          </Button>
+        </div>
       </Form>
     </div>
   );

@@ -112,7 +112,12 @@ const CategoryList = () => {
             <Button onClick={() => setShowAdd(true)}>Create Category</Button>
           </div>
         </div>
-        {showAdd && <AddCategory onAdded={(err?: Error) => onAdded(err)} />}
+        {showAdd && (
+          <AddCategory
+            onAdded={(err?: Error) => onAdded(err)}
+            onCancelled={() => setShowAdd(false)}
+          />
+        )}
         {categoryLoadError ? (
           <div>Failed to load Categories: {categoryLoadError.message}</div>
         ) : (

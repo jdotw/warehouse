@@ -16,6 +16,22 @@
 }
 
 .form-label {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
   margin-right: 0.5em;
+}
+
+.Form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.ButtonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.SubmitButton {
+  margin-left: 0.5em;
 }

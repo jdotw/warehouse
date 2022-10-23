@@ -7,12 +7,13 @@ import "./AddItem.css";
 type Props = {
   categoryID: string;
   onAdded: (error?: Error) => void;
+  onCancelled: () => void;
 };
 
 const AddItem = (props: Props) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [name, setName] = useState("");
-  const { categoryID, onAdded } = props;
+  const { categoryID, onAdded, onCancelled } = props;
 
   const formSubmitted = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -45,7 +46,7 @@ const AddItem = (props: Props) => {
   return (
     <div className="Container">
       <h2>Add New Item</h2>
-      <Form onSubmit={formSubmitted}>
+      <Form onSubmit={formSubmitted} className="Form">
         <Form.Group controlId="formItemName" className="FieldRow">
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -53,9 +54,18 @@ const AddItem = (props: Props) => {
             onChange={(e) => setName(e.currentTarget.value)}
           />
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
+        <div className="ButtonContainer">
+          <Button
+            variant="secondary"
+            onClick={onCancelled}
+            className="CancelButton"
+          >
+            Cancel
+          </Button>
+          <Button variant="primary" type="submit" className="SubmitButton">
+            Submit
+          </Button>
+        </div>
       </Form>
     </div>
   );
