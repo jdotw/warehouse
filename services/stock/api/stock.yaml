@@ -136,7 +136,7 @@ paths:
   /categories/{category_id}/items:
     get:
       tags:
-        - Items
+        - Item
       summary: Get all Items in a Category
       description: Get all Items in a Category
       operationId: GetItemsInCategory
@@ -157,7 +157,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
     post:
       tags:
-        - Items
+        - Item
       summary: Create Item in a Category
       description: Create Item in a Category
       operationId: CreateItemInCategory
