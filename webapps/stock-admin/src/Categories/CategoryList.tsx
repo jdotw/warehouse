@@ -106,8 +106,11 @@ const CategoryList = () => {
   return (
     <>
       <div className="CategoryList">
-        <div className="TopButtonBar">
-          <Button onClick={() => setShowAdd(true)}>Create Category</Button>
+        <div className="HeaderContainer">
+          <h1>Categories</h1>
+          <div className="TopButtonBar">
+            <Button onClick={() => setShowAdd(true)}>Create Category</Button>
+          </div>
         </div>
         {showAdd && <AddCategory onAdded={(err?: Error) => onAdded(err)} />}
         {categoryLoadError ? (
