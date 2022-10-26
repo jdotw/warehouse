@@ -12,6 +12,7 @@ import (
 // Create Item
 type CreateItemRequest struct {
 	Name string `json:"name"`
+	UPC  int    `json:"upc"`
 }
 
 // HTTPError defines model for HTTPError.

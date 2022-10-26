@@ -18,7 +18,6 @@ type Category struct {
 // Create Category
 type CreateCategoryRequest struct {
 	Name string `json:"name"`
-	Upc  string `json:"upc"`
 }
 
 // HTTPError defines model for HTTPError.

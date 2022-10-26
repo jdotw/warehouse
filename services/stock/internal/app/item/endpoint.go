@@ -11,6 +11,7 @@ import (
 	"github.com/jdotw/go-utils/authz/opa"
 	"github.com/jdotw/go-utils/log"
 	"github.com/opentracing/opentracing-go"
+	"go.uber.org/zap"
 )
 
 type EndpointSet struct {
@@ -80,8 +81,6 @@ type GetItemsInCategoryEndpointRequest struct {
 
 func makeGetItemsInCategoryEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		logger.For(ctx).Info("Item.GetItemsInCategoryEndpoint received request")
-
 		er := request.(GetItemsInCategoryEndpointRequest)
 		v, err := s.GetItemsInCategory(ctx, er.CategoryID)
 		if err != nil {
@@ -103,9 +102,9 @@ type CreateItemInCategoryEndpointRequest struct {
 
 func makeCreateItemInCategoryEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		logger.For(ctx).Info("Item.CreateItemInCategoryEndpoint received request")
-
 		er := request.(CreateItemInCategoryEndpointRequest)
+		logger.For(ctx).Info("Item.CreateItemInCategoryEndpoint received request", zap.String("category_id", er.CategoryID), zap.String("name", er.Name), zap.Int("upc", er.UPC))
+
 		// Convert endpoint request to JSON
 		erJSON, err := json.Marshal(er)
 		if err != nil {

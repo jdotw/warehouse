@@ -65,6 +65,7 @@ func (p *repository) CreateItemInCategory(ctx context.Context, item *Item) (*Ite
 	var tx *gorm.DB
 	tx = p.db.WithContext(ctx).Create(item)
 	if tx.Error != nil {
+		p.logger.For(ctx).Fatal("CreateItemInCategory Failed", zap.Error(tx.Error))
 		return nil, tx.Error
 	}
 	return item, nil
