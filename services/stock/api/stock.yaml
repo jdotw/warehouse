@@ -308,19 +308,19 @@ components:
       properties:
         name:
           type: string
-        upc:
-          type: string
       required:
         - name
-        - upc
     CreateItemRequest:
       description: "Create Item"
       type: object
       properties:
         name:
           type: string
+        upc:
+          type: string
       required:
         - name
+        - upc
     # Errors
     HTTPError:
       type: object
