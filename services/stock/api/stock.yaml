@@ -317,7 +317,7 @@ components:
         name:
           type: string
         upc:
-          type: string
+          type: integer
       required:
         - name
         - upc
