@@ -13,6 +13,7 @@ type Props = {
 const AddItem = (props: Props) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [name, setName] = useState("");
+  const [upc, setUpc] = useState<number>(0);
   const { categoryID, onAdded, onCancelled } = props;
 
   const formSubmitted = async (e: React.SyntheticEvent) => {
@@ -25,13 +26,16 @@ const AddItem = (props: Props) => {
         scope: "write:item",
       });
       console.log("TOKEN: ", accessToken);
+      const body = JSON.stringify({
+        name: name,
+        upc: parseInt(upc),
+      });
+      console.log("BODY: ", body);
       const response = await fetch(`/api/categories/${categoryID}/items`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({
-          name: name,
-        }),
+        body: body,
         method: "POST",
       });
       const response_json = await response.json();
@@ -52,6 +56,13 @@ const AddItem = (props: Props) => {
           <Form.Control
             placeholder="Item Name"
             onChange={(e) => setName(e.currentTarget.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formItemUPC" className="FieldRow">
+          <Form.Label>UPC</Form.Label>
+          <Form.Control
+            placeholder="UPC"
+            onChange={(e) => setUpc(e.currentTarget.value)}
           />
         </Form.Group>
         <div className="ButtonContainer">
