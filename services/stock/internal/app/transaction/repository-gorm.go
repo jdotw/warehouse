@@ -52,7 +52,7 @@ func (p *repository) GetTransactions(ctx context.Context) (*[]Transaction, error
 	var v []Transaction
 	// TODO: Check the .First query as codegen is not able
 	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&[]Transaction{}).First(&v, "")
+	tx := p.db.WithContext(ctx).Model(&Transaction{}).Preload("Items").Find(&v)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
