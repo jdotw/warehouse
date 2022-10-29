@@ -419,29 +419,27 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/TransactionItemObject"
+            description: Item in a Transaction
+            type: object
+            properties:
+              id:
+                type: string
+                x-oapi-codegen-extra-tags:
+                  gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+              transaction_id:
+                type: string
+                x-oapi-codegen-extra-tags:
+                  gorm: "not null"
+              quantity:
+                type: integer
+            required:
+              - id
+              - transaction_id
+              - quantity
       required:
         - id
         - timestamp
         - items
-    TransactionItemObject:
-      description: Item in a Transaction
-      type: object
-      properties:
-        id:
-          type: string
-          x-oapi-codegen-extra-tags:
-            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
-        transaction_id:
-          type: string
-          x-oapi-codegen-extra-tags:
-            gorm: "not null"
-        quantity:
-          type: integer
-      required:
-        - id
-        - transaction_id
-        - quantity
     CreateTransactionRequest:
       description: Create Transaction
       type: object
