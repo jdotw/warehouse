@@ -49,9 +49,7 @@ func AddHTTPRoutes(r *mux.Router, endpoints EndpointSet, logger log.Factory, tra
 // GetTransactions
 
 func decodeGetTransactionsEndpointRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var endpointRequest GetTransactionsEndpointRequest
-
-	return endpointRequest, nil
+	return nil, nil
 }
 
 // CreateTransaction

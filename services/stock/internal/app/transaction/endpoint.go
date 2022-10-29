@@ -56,14 +56,10 @@ func NewEndpointSet(s Service, logger log.Factory, tracer opentracing.Tracer) En
 
 // GetTransactions
 
-type GetTransactionsEndpointRequest struct {
-}
-
 func makeGetTransactionsEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		logger.For(ctx).Info("Transaction.GetTransactionsEndpoint received request")
 
-		er := request.(GetTransactionsEndpointRequest)
 		v, err := s.GetTransactions(ctx)
 		if err != nil {
 			return &v, err
