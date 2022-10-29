@@ -419,12 +419,12 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/TransactionItem"
+            $ref: "#/components/schemas/TransactionItemObject"
       required:
         - id
         - timestamp
         - items
-    TransactionItem:
+    TransactionItemObject:
       description: Item in a Transaction
       type: object
       properties:

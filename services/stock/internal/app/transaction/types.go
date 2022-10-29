@@ -38,7 +38,11 @@ type Transaction struct {
 }
 
 // TransactionItem defines model for []transaction_item.
-type TransactionItem TransactionItem
+type TransactionItem struct {
+	ID            string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	Quantity      int    `json:"quantity"`
+	TransactionID string `gorm:"not null" json:"transaction_id"`
+}
 
 // BadRequestError defines model for BadRequestError.
 type BadRequestError HTTPError
