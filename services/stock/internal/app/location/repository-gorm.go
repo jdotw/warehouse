@@ -27,10 +27,8 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
-		err = db.AutoMigrate(&Location{})
-		if err != nil {
-			logger.For(ctx).Fatal("Failed to migrate db for type Location", zap.Error(err))
-		}
+		// DO NOT AutoMigrate Location here
+		// It is already AutoMigrated in Item's repository-gorm
 
 		r = &repository{db: db}
 	}

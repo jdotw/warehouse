@@ -6,6 +6,7 @@ import (
 
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/recorderrors"
+	"github.com/jdotw/stock/internal/app/location"
 	"github.com/jdotw/stock/internal/app/transaction"
 	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
@@ -31,10 +32,10 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
 		// NOTE: We AutoMigrate transaction's Transaction and TransactionLineItem
-		// structs here so that the correct ForeignKey relationship is established
-		// with Item
+		// structs here, and also location's Location struct, so that the correct
+		// ForeignKey relationship is established between them
 
-		err = db.AutoMigrate(&Item{}, &transaction.Transaction{}, &transaction.TransactionLineItem{})
+		err = db.AutoMigrate(&Item{}, &transaction.Transaction{}, &transaction.TransactionLineItem{}, &location.Location{})
 		if err != nil {
 			logger.For(ctx).Fatal("Failed to migrate db for type Item", zap.Error(err))
 		}
