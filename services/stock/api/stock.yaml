@@ -384,10 +384,10 @@ components:
           type: integer
           x-oapi-codegen-extra-tags:
             gorm: "not null"
-        transactions:
+        transaction_items:
           type: array
           items:
-            $ref: "#/components/schemas/Transaction"
+            $ref: "#/components/schemas/TransactionLineItem"
       required:
         - id
         - category_id
@@ -423,32 +423,36 @@ components:
         items:
           type: array
           items:
-            description: Item in a Transaction
-            type: object
-            properties:
-              id:
-                type: string
-                x-oapi-codegen-extra-tags:
-                  gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
-              item_id:
-                type: string
-                x-oapi-codegen-extra-tags:
-                  gorm: "not null"
-              transaction_id:
-                type: string
-                x-oapi-codegen-extra-tags:
-                  gorm: "not null"
-              quantity:
-                type: integer
-            required:
-              - id
-              - item_id
-              - transaction_id
-              - quantity
+            $ref: "#/components/schemas/TransactionLineItem"
       required:
         - id
         - timestamp
         - items
+
+    TransactionLineItem:
+      description: Item in a Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        item_id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        transaction_id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        quantity:
+          type: integer
+      required:
+        - id
+        - item_id
+        - transaction_id
+        - quantity
+
     CreateTransactionRequest:
       description: Create Transaction
       type: object

@@ -7,6 +7,7 @@ package item
 
 import (
 	_ "embed"
+	"time"
 )
 
 // Create Item
@@ -22,10 +23,29 @@ type HTTPError struct {
 
 // Item
 type Item struct {
-	CategoryID string `gorm:"type:uuid;default:uuid_generate_v4();" json:"category_id"`
-	ID         string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
-	Name       string `gorm:"not null" json:"name"`
-	UPC        int    `gorm:"not null" json:"upc"`
+	CategoryID   string             `gorm:"type:uuid;default:uuid_generate_v4();" json:"category_id"`
+	ID           string             `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	Name         string             `gorm:"not null" json:"name"`
+	Transactions *[]ItemTransaction `json:"transactions,omitempty"`
+	UPC          int                `gorm:"not null" json:"upc"`
+}
+
+// ItemTransaction defines model for []item_transaction.
+type ItemTransaction Transaction
+
+// Transaction
+type Transaction struct {
+	ID        string            `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	Items     []TransactionItem `json:"items"`
+	Timestamp time.Time         `gorm:"not null" json:"timestamp"`
+}
+
+// TransactionItem defines model for []transaction_item.
+type TransactionItem struct {
+	ID            string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	ItemID        string `gorm:"not null" json:"item_id"`
+	Quantity      int    `json:"quantity"`
+	TransactionID string `gorm:"not null" json:"transaction_id"`
 }
 
 // BadRequestError defines model for BadRequestError.
