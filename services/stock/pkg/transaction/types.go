@@ -38,7 +38,10 @@ type Transaction struct {
 }
 
 // TransactionItem defines model for []transaction_item.
-type TransactionItem struct {
+type TransactionItem TransactionLineItem
+
+// Item in a Transaction
+type TransactionLineItem struct {
 	ID            string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
 	ItemID        string `gorm:"not null" json:"item_id"`
 	Quantity      int    `json:"quantity"`
