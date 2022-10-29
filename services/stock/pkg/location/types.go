@@ -7,6 +7,8 @@ package location
 
 import (
 	_ "embed"
+	"time"
+	"github.com/jdotw/stock/pkg/transaction"
 )
 
 // Create Location
@@ -21,8 +23,9 @@ type HTTPError struct {
 
 // Location
 type Location struct {
-	ID   string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
-	Name string `gorm:"not null" json:"name"`
+	ID           string                 `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	Name         string                 `gorm:"not null" json:"name"`
+	Transactions *[]transaction.Transaction `json:"transactions,omitempty"`
 }
 
 // BadRequestError defines model for BadRequestError.
