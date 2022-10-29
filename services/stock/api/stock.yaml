@@ -384,6 +384,10 @@ components:
           type: integer
           x-oapi-codegen-extra-tags:
             gorm: "not null"
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
       required:
         - id
         - category_id
