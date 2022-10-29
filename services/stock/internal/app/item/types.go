@@ -3,27 +3,33 @@
 // It is expected that this file will be re-generated and overwitten to
 // adapt to changes in the OpenAPI spec that was used to generate it
 
-package category
+package item
 
 import (
 	_ "embed"
+	"github.com/jdotw/stock/internal/app/transaction"
 )
 
-// Category
-type Category struct {
-	ID   string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
-	Name string `gorm:"not null" json:"name"`
-}
-
-// Create Category
-type CreateCategoryRequest struct {
+// Create Item
+type CreateItemRequest struct {
 	Name string `json:"name"`
+	UPC  int    `json:"upc"`
 }
 
 // HTTPError defines model for HTTPError.
 type HTTPError struct {
 	Message *string `json:"message,omitempty"`
 }
+
+// Item
+type Item struct {
+	CategoryID           string                     `gorm:"type:uuid;default:uuid_generate_v4();" json:"category_id"`
+	ID                   string                     `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	Name                 string                     `gorm:"not null" json:"name"`
+	TransactionLineItems *[]transaction.TransactionLineItem `json:"transaction_line_items,omitempty"`
+	UPC                  int                        `gorm:"not null" json:"upc"`
+}
+
 
 // BadRequestError defines model for BadRequestError.
 type BadRequestError HTTPError
@@ -40,8 +46,8 @@ type NotFoundError HTTPError
 // UnauthorizedError defines model for UnauthorizedError.
 type UnauthorizedError HTTPError
 
-// Create Category
-type CreateCategory CreateCategoryRequest
+// Create Item
+type CreateItemInCategory CreateItemRequest
 
-// Category
-type UpdateCategory Category
+// Item
+type UpdateItem Item

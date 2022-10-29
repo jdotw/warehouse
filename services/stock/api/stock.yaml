@@ -129,9 +129,215 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "500":
           $ref: "#/components/responses/InternalServerError"
+
+  #
+  # Items
+  #
+  /categories/{category_id}/items:
+    get:
+      tags:
+        - Item
+      summary: Get all Items in a Category
+      description: Get all Items in a Category
+      operationId: GetItemsInCategory
+      parameters:
+        - $ref: "#/components/parameters/CategoryID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      tags:
+        - Item
+      summary: Create Item in a Category
+      description: Create Item in a Category
+      operationId: CreateItemInCategory
+      parameters:
+        - $ref: "#/components/parameters/CategoryID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateItemRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /items/{item_id}:
+    get:
+      tags:
+        - Item
+      summary: Get Item
+      description: Get Item
+      operationId: GetItem
+      parameters:
+        - $ref: "#/components/parameters/ItemID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    patch:
+      tags:
+        - Item
+      summary: Update Item
+      description: Update Item
+      operationId: UpdateItem
+      parameters:
+        - $ref: "#/components/parameters/ItemID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Item"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    delete:
+      tags:
+        - Item
+      summary: Delete a Item
+      description: Delete a Item
+      operationId: DeleteItem
+      parameters:
+        - $ref: "#/components/parameters/ItemID"
+      responses:
+        "200":
+          description: OK
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  #
+  # Transactions
+  #
+  /transactions:
+    get:
+      tags:
+        - Transaction
+      summary: Get all Transactions
+      description: Get all Transactions
+      operationId: GetTransactions
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      tags:
+        - Transaction
+      summary: Create Transaction
+      description: Create Transaction
+      operationId: CreateTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTransactionRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /transactions/{transaction_id}:
+    get:
+      tags:
+        - Transaction
+      summary: Get a specific Transaction
+      description: Get a specific Transaction
+      operationId: GetTransaction
+      parameters:
+        - $ref: "#/components/parameters/TransactionID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
 components:
   schemas:
     # Objects
+    #
+    # Category
+    #
     Category:
       description: Category
       type: object
@@ -148,13 +354,129 @@ components:
         - id
         - name
     CreateCategoryRequest:
-      description: "Create Syrup Category"
+      description: "Create Category"
       type: object
       properties:
         name:
           type: string
       required:
         - name
+    #
+    # Item
+    #
+    Item:
+      description: Item
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        category_id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "type:uuid;default:uuid_generate_v4();"
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        upc:
+          type: integer
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        transaction_line_items:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionLineItem"
+      required:
+        - id
+        - category_id
+        - name
+        - upc
+    CreateItemRequest:
+      description: "Create Item"
+      type: object
+      properties:
+        name:
+          type: string
+        upc:
+          type: integer
+      required:
+        - name
+        - upc
+    #
+    # Transaction
+    #
+    Transaction:
+      description: Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        timestamp:
+          type: string
+          format: date-time
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionLineItem"
+      required:
+        - id
+        - timestamp
+        - items
+
+    TransactionLineItem:
+      description: Item in a Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        item_id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        transaction_id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        quantity:
+          type: integer
+      required:
+        - id
+        - item_id
+        - transaction_id
+        - quantity
+
+    CreateTransactionRequest:
+      description: Create Transaction
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateTransactionItem"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - items
+    CreateTransactionItem:
+      description: Item in a new Transaction
+      type: object
+      properties:
+        item_id:
+          type: string
+        quantity:
+          type: integer
+      required:
+        - item_id
+        - quantity
     # Errors
     HTTPError:
       type: object
@@ -164,6 +486,22 @@ components:
   parameters:
     CategoryID:
       name: category_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    ItemID:
+      name: item_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    TransactionID:
+      name: transaction_id
       in: path
       required: true
       style: simple
