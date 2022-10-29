@@ -6,6 +6,7 @@ import (
 
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/recorderrors"
+	"github.com/jdotw/stock/internal/app/transaction"
 	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
@@ -29,19 +30,13 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
-		// TODO: Ensure these migrations are correct
-		// The OpenAPI Spec used to generate this code often uses
-		// results in AutoMigrate statements being generated for
-		// request/response body objects instead of actual data models
+		// NOTE: We AutoMigrate transaction's Transaction and TransactionLineItem
+		// structs here so that the correct ForeignKey relationship is established
+		// with Item
 
-		err = db.AutoMigrate(&Item{})
+		err = db.AutoMigrate(&Item{}, &transaction.Transaction{}, &transaction.TransactionLineItem{})
 		if err != nil {
 			logger.For(ctx).Fatal("Failed to migrate db for type Item", zap.Error(err))
-		}
-
-		err = db.AutoMigrate(&[]Item{})
-		if err != nil {
-			logger.For(ctx).Fatal("Failed to migrate db for type []Item", zap.Error(err))
 		}
 
 		r = &repository{db: db, logger: logger, tracer: tracer}
