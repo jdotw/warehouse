@@ -384,7 +384,7 @@ components:
           type: integer
           x-oapi-codegen-extra-tags:
             gorm: "not null"
-        transaction_items:
+        transaction_line_items:
           type: array
           items:
             $ref: "#/components/schemas/TransactionLineItem"
