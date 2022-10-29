@@ -426,6 +426,10 @@ components:
                 type: string
                 x-oapi-codegen-extra-tags:
                   gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+              item_id:
+                type: string
+                x-oapi-codegen-extra-tags:
+                  gorm: "not null"
               transaction_id:
                 type: string
                 x-oapi-codegen-extra-tags:
@@ -434,6 +438,7 @@ components:
                 type: integer
             required:
               - id
+              - item_id
               - transaction_id
               - quantity
       required:
@@ -457,14 +462,14 @@ components:
       description: Item in a new Transaction
       type: object
       properties:
-        id:
+        item_id:
           type: string
           x-oapi-codegen-extra-tags:
             gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
         quantity:
           type: integer
       required:
-        - id
+        - item_id
         - quantity
     # Errors
     HTTPError:
