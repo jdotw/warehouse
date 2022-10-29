@@ -11,7 +11,7 @@ import (
 type Service interface {
 	GetLocations(ctx context.Context) (*[]Location, error)
 	CreateLocation(ctx context.Context, location *Location) (*Location, error)
-	DeleteLocation(ctx context.Context) error
+	DeleteLocation(ctx context.Context, locationID string) error
 	GetLocation(ctx context.Context, locationID string) (*Location, error)
 	UpdateLocation(ctx context.Context, location *Location) (*Location, error)
 }
@@ -40,9 +40,9 @@ func (f *service) CreateLocation(ctx context.Context, location *Location) (*Loca
 	return v, err
 }
 
-func (f *service) DeleteLocation(ctx context.Context) error {
-	v, err := f.repository.DeleteLocation(ctx)
-	return v, err
+func (f *service) DeleteLocation(ctx context.Context, locationID string) error {
+	err := f.repository.DeleteLocation(ctx, locationID)
+	return err
 }
 
 func (f *service) GetLocation(ctx context.Context, locationID string) (*Location, error) {

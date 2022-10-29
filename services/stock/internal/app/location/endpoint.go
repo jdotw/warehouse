@@ -74,14 +74,10 @@ func NewEndpointSet(s Service, logger log.Factory, tracer opentracing.Tracer) En
 
 // GetLocations
 
-type GetLocationsEndpointRequest struct {
-}
-
 func makeGetLocationsEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		logger.For(ctx).Info("Location.GetLocationsEndpoint received request")
 
-		er := request.(GetLocationsEndpointRequest)
 		v, err := s.GetLocations(ctx)
 		if err != nil {
 			return &v, err
@@ -141,9 +137,7 @@ type DeleteLocationEndpointRequest struct {
 func makeDeleteLocationEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		logger.For(ctx).Info("Location.DeleteLocationEndpoint received request")
-
-		// TODO: No response type could be determined, you'll need to write this yourself
-
+		return nil, nil
 	}
 }
 
@@ -192,7 +186,7 @@ func makeUpdateLocationEndpoint(s Service, logger log.Factory, tracer opentracin
 		json.Unmarshal(erJSON, &sr)
 
 		// Set variables from path parameters
-		sr.LocationID = er.LocationID
+		sr.ID = er.LocationID
 
 		//
 		// TODO: Review the code above.

@@ -3,7 +3,6 @@ package location
 import (
 	"context"
 	_ "embed"
-	"errors"
 
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/recorderrors"
@@ -28,19 +27,9 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
-		// TODO: Ensure these migrations are correct
-		// The OpenAPI Spec used to generate this code often uses
-		// results in AutoMigrate statements being generated for
-		// request/response body objects instead of actual data models
-
 		err = db.AutoMigrate(&Location{})
 		if err != nil {
 			logger.For(ctx).Fatal("Failed to migrate db for type Location", zap.Error(err))
-		}
-
-		err = db.AutoMigrate(&[]Location{})
-		if err != nil {
-			logger.For(ctx).Fatal("Failed to migrate db for type []Location", zap.Error(err))
 		}
 
 		r = &repository{db: db}
@@ -51,9 +40,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 func (p *repository) GetLocations(ctx context.Context) (*[]Location, error) {
 	var v []Location
-	// TODO: Check the .First query as codegen is not able
-	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&[]Location{}).First(&v, "")
+	tx := p.db.WithContext(ctx).Model(&Location{}).Find(&v)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
@@ -70,15 +57,16 @@ func (p *repository) CreateLocation(ctx context.Context, location *Location) (*L
 }
 
 func (p *repository) DeleteLocation(ctx context.Context, locationID string) error {
-	// TODO: Unable to generate code for this Operation
-	return nil, errors.New("Not Implemented")
+	tx := p.db.WithContext(ctx).Delete(&Location{}, "id = ? ", locationID)
+	if tx.RowsAffected == 0 {
+		return recorderrors.ErrNotFound
+	}
+	return tx.Error
 }
 
 func (p *repository) GetLocation(ctx context.Context, locationID string) (*Location, error) {
 	var v Location
-	// TODO: Check the .First query as codegen is not able
-	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&Location{}).First(&v, "location_id = ? ", locationID)
+	tx := p.db.WithContext(ctx).Model(&Location{}).First(&v, "id = ? ", locationID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
@@ -87,7 +75,6 @@ func (p *repository) GetLocation(ctx context.Context, locationID string) (*Locat
 
 func (p *repository) UpdateLocation(ctx context.Context, location *Location) (*Location, error) {
 	var v Location
-	// TODO: Check that the .Where query is appropriate
 	tx := p.db.WithContext(ctx).Model(&Location{}).Where("id = ?", location.ID).UpdateColumns(location)
 	if tx.RowsAffected == 0 {
 		return nil, recorderrors.ErrNotFound
