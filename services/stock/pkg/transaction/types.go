@@ -33,12 +33,9 @@ type HTTPError struct {
 // Transaction
 type Transaction struct {
 	ID        string            `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
-	Items     []TransactionItem `json:"items"`
+	Items     []TransactionLineItem `json:"items"`
 	Timestamp time.Time         `gorm:"not null" json:"timestamp"`
 }
-
-// TransactionItem defines model for []transaction_item.
-type TransactionItem TransactionLineItem
 
 // Item in a Transaction
 type TransactionLineItem struct {
