@@ -608,6 +608,10 @@ components:
             gorm: "not null"
         quantity:
           type: integer
+        sequence_number:
+          type: integer
+          x-oapi-codegen-extra-tags:
+            gorm: "unique;type:uint;autoIncrement;"
       required:
         - id
         - item_id
