@@ -38,8 +38,6 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 func (p *repository) GetTransactions(ctx context.Context) (*[]Transaction, error) {
 	var v []Transaction
-	// TODO: Check the .First query as codegen is not able
-	// to elegantly deal with multiple request parameters
 	tx := p.db.WithContext(ctx).Model(&Transaction{}).Preload("Items").Find(&v)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
@@ -58,9 +56,7 @@ func (p *repository) CreateTransaction(ctx context.Context, transaction *Transac
 
 func (p *repository) GetTransaction(ctx context.Context, transactionID string) (*Transaction, error) {
 	var v Transaction
-	// TODO: Check the .First query as codegen is not able
-	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&Transaction{}).First(&v, "transaction_id = ? ", transactionID)
+	tx := p.db.WithContext(ctx).Model(&Transaction{}).Preload("Items").First(&v, "id = ? ", transactionID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
