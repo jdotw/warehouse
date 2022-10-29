@@ -259,9 +259,85 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  #
+  # Transactions
+  #
+  /transactions:
+    get:
+      tags:
+        - Transaction
+      summary: Get all Transactions
+      description: Get all Transactions
+      operationId: GetTransactions
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      tags:
+        - Transaction
+      summary: Create Transaction
+      description: Create Transaction
+      operationId: CreateTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTransactionRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /transactions/{transaction_id}:
+    get:
+      tags:
+        - Transaction
+      summary: Get a specific Transaction
+      description: Get a specific Transaction
+      operationId: GetTransaction
+      parameters:
+        - $ref: "#/components/parameters/TransactionID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
 components:
   schemas:
     # Objects
+    #
+    # Category
+    #
     Category:
       description: Category
       type: object
@@ -277,6 +353,17 @@ components:
       required:
         - id
         - name
+    CreateCategoryRequest:
+      description: "Create Category"
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    #
+    # Item
+    #
     Item:
       description: Item
       type: object
@@ -302,14 +389,6 @@ components:
         - category_id
         - name
         - upc
-    CreateCategoryRequest:
-      description: "Create Category"
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-        - name
     CreateItemRequest:
       description: "Create Item"
       type: object
@@ -321,6 +400,74 @@ components:
       required:
         - name
         - upc
+    #
+    # Transaction
+    #
+    Transaction:
+      description: Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        timestamp:
+          type: string
+          format: date-time
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionItem"
+      required:
+        - id
+        - timestamp
+        - items
+    TransactionItem:
+      description: Item in a Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        transaction_id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+        quantity:
+          type: integer
+      required:
+        - id
+        - transaction_id
+        - quantity
+    CreateTransactionRequest:
+      description: Create Transaction
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateTransactionItem"
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - items
+    CreateTransactionItem:
+      description: Item in a new Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        quantity:
+          type: integer
+      required:
+        - id
+        - quantity
     # Errors
     HTTPError:
       type: object
@@ -338,6 +485,14 @@ components:
         type: string
     ItemID:
       name: item_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    TransactionID:
+      name: transaction_id
       in: path
       required: true
       style: simple
