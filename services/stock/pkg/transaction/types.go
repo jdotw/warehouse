@@ -41,10 +41,11 @@ type Transaction struct {
 
 // Item in a Transaction
 type TransactionLineItem struct {
-	ID            string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
-	ItemID        string `gorm:"not null" json:"item_id"`
-	Quantity      int    `json:"quantity"`
-	TransactionID string `gorm:"not null" json:"transaction_id"`
+	ID             string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	ItemID         string `gorm:"not null" json:"item_id"`
+	Quantity       int    `json:"quantity"`
+	SequenceNumber int    `gorm:"unique;type:uint;autoIncrement;" json:"sequence_number"`
+	TransactionID  string `gorm:"not null" json:"transaction_id"`
 }
 
 // BadRequestError defines model for BadRequestError.

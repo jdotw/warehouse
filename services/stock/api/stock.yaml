@@ -617,6 +617,7 @@ components:
         - item_id
         - transaction_id
         - quantity
+        - sequence_number
 
     CreateTransactionRequest:
       description: Create Transaction
