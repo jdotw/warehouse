@@ -37,7 +37,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 			logger.For(ctx).Fatal("Failed to migrate db for type Transaction", zap.Error(err))
 		}
 
-		err = db.AutoMigrate(&[]Transaction{})
+		err = db.AutoMigrate(&TransactionItem{})
 		if err != nil {
 			logger.For(ctx).Fatal("Failed to migrate db for type []Transaction", zap.Error(err))
 		}
