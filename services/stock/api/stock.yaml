@@ -566,6 +566,11 @@ components:
           type: string
           x-oapi-codegen-extra-tags:
             gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        location_id:
+          type: string
+          format: uuid
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
         timestamp:
           type: string
           format: date-time
@@ -577,6 +582,7 @@ components:
             $ref: "#/components/schemas/TransactionLineItem"
       required:
         - id
+        - location_id
         - timestamp
         - items
 
@@ -608,6 +614,9 @@ components:
       description: Create Transaction
       type: object
       properties:
+        location_id:
+          type: string
+          format: uuid
         items:
           type: array
           items:
@@ -616,6 +625,7 @@ components:
           type: string
           format: date-time
       required:
+        - location_id
         - items
     CreateTransactionItem:
       description: Item in a new Transaction
