@@ -1,0 +1,30 @@
+_id: req_de601861b98948a0bbad9d807c0ee516
+type: Request
+parentId: wrk_441ed85ad60041b9a697afe463b8c632
+modified: 1666398379693
+created: 1666398098759
+url: http://localhost:8080/categories
+name: Create Category
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"name": "New Category"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.RYhjxx572NjG2lvprpLkzk-wuoOJDhn0xPibyHosHU4
+metaSortKey: -1666398098759
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

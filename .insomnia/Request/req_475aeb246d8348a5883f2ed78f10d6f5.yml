@@ -1,0 +1,43 @@
+_id: req_475aeb246d8348a5883f2ed78f10d6f5
+type: Request
+parentId: wrk_441ed85ad60041b9a697afe463b8c632
+modified: 1667010102445
+created: 1667004032519
+url: http://localhost:8080/transactions
+name: Create Transaction
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"items": [
+    		{
+    			"quantity": 2,
+    			"item_id": "9fcb59b5-9b2a-4759-abb7-6b2809cb47e8"
+    		},
+    		{
+    			"quantity": -2,
+    			"item_id": "9fcb59b5-9b2a-4759-abb7-6b2809cb47e8"
+    		},
+    		{
+    			"quantity": 9,
+    			"item_id": "557adb58-8b4d-4d06-85ed-ced7b5ff22fc"
+    		}		
+    	]		
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication:
+  type: bearer
+  token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkhqNFdyLXpJa05XTFdTUnVQZ2ZlZCJ9.eyJpc3MiOiJodHRwczovL3dhcmVob3VzZS5hdS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjM1MzQ4YWI5ZmRmM2IxNWI1ZGY1NDE3IiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC8iLCJodHRwczovL3dhcmVob3VzZS5hdS5hdXRoMC5jb20vdXNlcmluZm8iXSwiaWF0IjoxNjY3MDAwMDYwLCJleHAiOjE2NjcwODY0NjAsImF6cCI6ImlyRUkxZFZKT2J2aUo2N21ac1lGRWpQOTNFSWx0aHlzIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCB3cml0ZTpjYXRlZ29yeSByZWFkOmNhdGVnb3J5IHdyaXRlOml0ZW0gcmVhZDppdGVtIG9mZmxpbmVfYWNjZXNzIn0.Codq2ogD0VoIdk72pUm08NeKUnhFXXvpnrSjv4DsvCVLjm0-9j7tNp1abcqJGury19arX3VhgB3KT-9AdnmjzMDGAi6_-hg-juBsXtjYPM4JqHUHZ_8NS2FaqmJpxtit5KUr8DjvSrhXSNJZxDLeF0-HjJMFmPyyBfx1D7ccJQcG8giuU4v53SKaWXvlnZQnnXXztAfnSbe1zwrValiROo1dsbObZ4H3R6GZbmdr8HxAVpm84lW01xHZGCeahoPYepCFku5Au4mzwS0dym6hC9Kt5gOU6H485I9klWXtuYH7dYCucHr6_WhDjFWf5SwpfX5Jzd4xZjdtmTrYO2RDnQ
+metaSortKey: -1667004032519
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
