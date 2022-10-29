@@ -260,6 +260,131 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
   #
+  # Locations
+  #
+  /locations:
+    get:
+      tags:
+        - Location
+      summary: Get all Locations
+      description: Get all Locations
+      operationId: GetLocations
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Location"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      tags:
+        - Location
+      summary: Create Location
+      description: Create Location
+      operationId: CreateLocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLocationRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /locations/{location_id}:
+    get:
+      tags:
+        - Location
+      summary: Get a specific Location
+      description: Get a specific Location
+      operationId: GetLocation
+      parameters:
+        - $ref: "#/components/parameters/LocationID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    patch:
+      tags:
+        - Location
+      summary: Update Location
+      description: Update Location
+      operationId: UpdateLocation
+      parameters:
+        - $ref: "#/components/parameters/LocationID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Location"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    delete:
+      tags:
+        - Location
+      summary: Delete a Location
+      description: Delete a Location
+      operationId: DeleteLocation
+      parameters:
+        - $ref: "#/components/parameters/LocationID"
+      responses:
+        "200":
+          description: OK
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "403":
+          $ref: "#/components/responses/ForbiddenError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  #
   # Transactions
   #
   /transactions:
@@ -405,6 +530,32 @@ components:
         - name
         - upc
     #
+    # Location
+    #
+    Location:
+      description: Location
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;default:uuid_generate_v4();"
+        name:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+      required:
+        - id
+        - name
+    CreateLocationRequest:
+      description: Create Location
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    #
     # Transaction
     #
     Transaction:
@@ -494,6 +645,14 @@ components:
         type: string
     ItemID:
       name: item_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    LocationID:
+      name: location_id
       in: path
       required: true
       style: simple
