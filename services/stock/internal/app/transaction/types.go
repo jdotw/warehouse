@@ -18,8 +18,9 @@ type CreateTransactionItem struct {
 
 // Create Transaction
 type CreateTransactionRequest struct {
-	Items     []CreateTransactionRequestItem `json:"items"`
-	Timestamp *time.Time                     `json:"timestamp,omitempty"`
+	Items      []CreateTransactionRequestItem `json:"items"`
+	LocationID string                         `json:"location_id"`
+	Timestamp  *time.Time                     `json:"timestamp,omitempty"`
 }
 
 // CreateTransactionRequestItem defines model for []create_transaction_request_item.
@@ -32,9 +33,10 @@ type HTTPError struct {
 
 // Transaction
 type Transaction struct {
-	ID        string            `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
-	Items     []TransactionLineItem `json:"items"`
-	Timestamp time.Time         `gorm:"not null" json:"timestamp"`
+	ID         string            `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	Items      []TransactionLineItem `json:"items"`
+	LocationID string            `gorm:"not null" json:"location_id"`
+	Timestamp  time.Time         `gorm:"not null" json:"timestamp"`
 }
 
 // Item in a Transaction
