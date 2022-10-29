@@ -12,7 +12,7 @@ import (
 
 // Item in a new Transaction
 type CreateTransactionItem struct {
-	ID       string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	ItemID   string `json:"item_id"`
 	Quantity int    `json:"quantity"`
 }
 
@@ -40,6 +40,7 @@ type Transaction struct {
 // TransactionItem defines model for []transaction_item.
 type TransactionItem struct {
 	ID            string `gorm:"primaryKey;unique;type:uuid;default:uuid_generate_v4();" json:"id"`
+	ItemID        string `gorm:"not null" json:"item_id"`
 	Quantity      int    `json:"quantity"`
 	TransactionID string `gorm:"not null" json:"transaction_id"`
 }
