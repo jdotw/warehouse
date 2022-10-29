@@ -27,20 +27,8 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
-		// TODO: Ensure these migrations are correct
-		// The OpenAPI Spec used to generate this code often uses
-		// results in AutoMigrate statements being generated for
-		// request/response body objects instead of actual data models
-
-		err = db.AutoMigrate(&Transaction{})
-		if err != nil {
-			logger.For(ctx).Fatal("Failed to migrate db for type Transaction", zap.Error(err))
-		}
-
-		err = db.AutoMigrate(&TransactionItem{})
-		if err != nil {
-			logger.For(ctx).Fatal("Failed to migrate db for type []Transaction", zap.Error(err))
-		}
+		// DO NOT AutoMigrate Transaction and/or TransactionLineItem here
+		// They are already AutoMigrated in Item's repository-gorm
 
 		r = &repository{db: db}
 	}
