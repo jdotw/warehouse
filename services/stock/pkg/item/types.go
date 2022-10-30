@@ -7,6 +7,7 @@ package item
 
 import (
 	_ "embed"
+	"github.com/jdotw/stock/internal/app/transaction"
 )
 
 // Create Item

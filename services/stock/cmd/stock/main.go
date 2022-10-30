@@ -14,6 +14,7 @@ import (
 	locationapp "github.com/jdotw/stock/internal/app/location"
 	transactionapp "github.com/jdotw/stock/internal/app/transaction"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/twmb/franz-go/pkg/kgo"
 	"go.uber.org/zap"
 )
 
@@ -26,6 +27,16 @@ func main() {
 
 	// HTTP Router
 	r := mux.NewRouter()
+
+	// Create Kafka Client
+	seeds := []string{"localhost:9092"}
+	k, err := kgo.NewClient(
+		kgo.SeedBrokers(seeds...),
+	)
+	if err != nil {
+		panic(err)
+	}
+	defer k.Close()
 
 	// Category Service
 	{
@@ -66,7 +77,7 @@ func main() {
 		if err != nil {
 			logger.Bg().Fatal("Failed to create transactionapp repository", zap.Error(err))
 		}
-		service := transactionapp.NewService(repo, logger, tracer)
+		service := transactionapp.NewService(repo, k, logger, tracer)
 		endPoints := transactionapp.NewEndpointSet(service, logger, tracer)
 		transactionapp.AddHTTPRoutes(r, endPoints, logger, tracer)
 	}

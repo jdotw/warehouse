@@ -7,7 +7,6 @@ package location
 
 import (
 	_ "embed"
-	"time"
 	"github.com/jdotw/stock/pkg/transaction"
 )
 
