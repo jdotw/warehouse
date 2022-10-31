@@ -6,8 +6,12 @@
 package transaction
 
 import (
+	"context"
 	_ "embed"
 	"time"
+
+	"github.com/jdotw/go-utils/log"
+	"github.com/twmb/franz-go/pkg/kgo"
 )
 
 // Item in a new Transaction
@@ -37,6 +41,11 @@ type Transaction struct {
 	Items      []TransactionLineItem `json:"items"`
 	LocationID string            `gorm:"not null" json:"location_id"`
 	Timestamp  time.Time         `gorm:"not null" json:"timestamp"`
+
+	// Internal
+	kafka      *kgo.Client
+	logger     log.Factory
+	ctx context.Context
 }
 
 // Item in a Transaction
