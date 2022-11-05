@@ -9,7 +9,7 @@ import (
 )
 
 type Service interface {
-	GetItem(ctx context.Context, itemID string) (*ItemStockOnHand, error)
+	GetItem(ctx context.Context, locationID string, itemID string) (*StockOnHand, error)
 	UpdateStockOnHand(ctx context.Context, itemID string, delta int) error
 }
 
@@ -27,12 +27,12 @@ func NewService(repository Repository, logger log.Factory, tracer opentracing.Tr
 	return svc
 }
 
-func (f *service) GetItem(ctx context.Context, itemID string) (*ItemStockOnHand, error) {
-	v, err := f.repository.GetItem(ctx, itemID)
+func (f *service) GetItem(ctx context.Context, locationID string, itemID string) (*StockOnHand, error) {
+	v, err := f.repository.GetItem(ctx, locationID, itemID)
 	return v, err
 }
 
-func (f *service) UpdateStockOnHand(ctx context.Context, itemID string, delta int) error {
-	err := f.repository.UpdateStockOnHand(ctx, itemID, delta)
+func (f *service) UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) error {
+	err := f.repository.UpdateStockOnHand(ctx, locationID, itemID, delta)
 	return err
 }

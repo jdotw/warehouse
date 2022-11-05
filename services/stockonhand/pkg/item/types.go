@@ -14,9 +14,10 @@ type HTTPError struct {
 	Message *string `json:"message,omitempty"`
 }
 
-// Stock on Hand for an Item
-type ItemStockOnHand struct {
-	ID          string `gorm:"primaryKey;unique;type:uuid;" json:"id"`
+// Stock on Hand for an Item at a Location
+type StockOnHand struct {
+	ItemID      string `gorm:"primaryKey;type:uuid;" json:"item_id"`
+	LocationID  string `gorm:"primaryKey;type:uuid;" json:"location_id"`
 	StockOnHand int    `gorm:"not null" json:"stock-on-hand"`
 }
 

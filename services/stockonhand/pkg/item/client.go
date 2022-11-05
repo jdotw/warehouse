@@ -92,11 +92,11 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 // The interface specification for the client above.
 type ClientInterface interface {
 	// GetItem request
-	GetItem(ctx context.Context, itemID string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetItem(ctx context.Context, locationID string, itemID string, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-func (c *Client) GetItem(ctx context.Context, itemID string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetItemRequest(c.Server, itemID)
+func (c *Client) GetItem(ctx context.Context, locationID string, itemID string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetItemRequest(c.Server, locationID, itemID)
 	if err != nil {
 		return nil, err
 	}
@@ -108,12 +108,19 @@ func (c *Client) GetItem(ctx context.Context, itemID string, reqEditors ...Reque
 }
 
 // NewGetItemRequest generates requests for GetItem
-func NewGetItemRequest(server string, itemID string) (*http.Request, error) {
+func NewGetItemRequest(server string, locationID string, itemID string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "item_id", runtime.ParamLocationPath, itemID)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "location_id", runtime.ParamLocationPath, locationID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "item_id", runtime.ParamLocationPath, itemID)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +130,7 @@ func NewGetItemRequest(server string, itemID string) (*http.Request, error) {
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/items/%s", pathParam0)
+	operationPath := fmt.Sprintf("/locations/%s/items/%s", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -186,13 +193,13 @@ func WithBaseURL(baseURL string) ClientOption {
 type ClientWithResponsesInterface interface {
 
 	// GetItem request
-	GetItemWithResponse(ctx context.Context, itemID string, reqEditors ...RequestEditorFn) (*GetItemResponse, error)
+	GetItemWithResponse(ctx context.Context, locationID string, itemID string, reqEditors ...RequestEditorFn) (*GetItemResponse, error)
 }
 
 type GetItemResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *ItemStockOnHand
+	JSON200      *StockOnHand
 	JSON400      *HTTPError
 	JSON404      *HTTPError
 	JSON500      *HTTPError
@@ -215,8 +222,8 @@ func (r GetItemResponse) StatusCode() int {
 }
 
 // GetItemWithResponse request returning *GetItemResponse
-func (c *ClientWithResponses) GetItemWithResponse(ctx context.Context, itemID string, reqEditors ...RequestEditorFn) (*GetItemResponse, error) {
-	rsp, err := c.GetItem(ctx, itemID, reqEditors...)
+func (c *ClientWithResponses) GetItemWithResponse(ctx context.Context, locationID string, itemID string, reqEditors ...RequestEditorFn) (*GetItemResponse, error) {
+	rsp, err := c.GetItem(ctx, locationID, itemID, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
@@ -238,7 +245,7 @@ func ParseGetItemResponse(rsp *http.Response) (*GetItemResponse, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest ItemStockOnHand
+		var dest StockOnHand
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

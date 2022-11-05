@@ -25,7 +25,7 @@ func AddHTTPRoutes(r *mux.Router, endpoints EndpointSet, logger log.Factory, tra
 		transport.HTTPEncodeResponse,
 		options...,
 	)
-	r.Handle("/items/{item_id}", getItemHandler).Methods("GET")
+	r.Handle("/locations/{location_id}/items/{item_id}", getItemHandler).Methods("GET")
 
 }
 
@@ -35,6 +35,7 @@ func decodeGetItemEndpointRequest(_ context.Context, r *http.Request) (interface
 	var endpointRequest GetItemEndpointRequest
 
 	vars := mux.Vars(r)
+	endpointRequest.LocationID = vars["location_id"]
 	endpointRequest.ItemID = vars["item_id"]
 
 	return endpointRequest, nil

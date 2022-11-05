@@ -38,7 +38,8 @@ func NewEndpointSet(s Service, logger log.Factory, tracer opentracing.Tracer) En
 // GetItem
 
 type GetItemEndpointRequest struct {
-	ItemID string
+	LocationID string
+	ItemID     string
 }
 
 func makeGetItemEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
@@ -46,7 +47,7 @@ func makeGetItemEndpoint(s Service, logger log.Factory, tracer opentracing.Trace
 		logger.For(ctx).Info("Item.GetItemEndpoint received request")
 
 		er := request.(GetItemEndpointRequest)
-		v, err := s.GetItem(ctx, er.ItemID)
+		v, err := s.GetItem(ctx, er.LocationID, er.ItemID)
 		if err != nil {
 			return &v, err
 		}

@@ -33,9 +33,9 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 		// results in AutoMigrate statements being generated for
 		// request/response body objects instead of actual data models
 
-		err = db.AutoMigrate(&ItemStockOnHand{})
+		err = db.AutoMigrate(&StockOnHand{})
 		if err != nil {
-			logger.For(ctx).Fatal("Failed to migrate db for type ItemStockOnHand", zap.Error(err))
+			logger.For(ctx).Fatal("Failed to migrate db for type StockOnHand", zap.Error(err))
 		}
 
 		r = &repository{db: db}
@@ -44,20 +44,21 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 	return r, nil
 }
 
-func (p *repository) GetItem(ctx context.Context, itemID string) (*ItemStockOnHand, error) {
-	var v ItemStockOnHand
+func (p *repository) GetItem(ctx context.Context, locationID string, itemID string) (*StockOnHand, error) {
+	var v StockOnHand
 	// TODO: Check the .First query as codegen is not able
 	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&ItemStockOnHand{}).First(&v, "id = ? ", itemID)
+	tx := p.db.WithContext(ctx).Model(&StockOnHand{}).First(&v, "location_id = ? AND item_id = ? ", locationID, itemID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
 	return &v, tx.Error
 }
 
-func (p *repository) UpdateStockOnHand(ctx context.Context, itemID string, delta int) error {
-	v := ItemStockOnHand{
-		ID:          itemID,
+func (p *repository) UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) error {
+	v := StockOnHand{
+		ItemID:      itemID,
+		LocationID:  locationID,
 		StockOnHand: (delta * -1),
 	}
 	tx := p.db.WithContext(ctx).Clauses(clause.OnConflict{

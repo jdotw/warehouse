@@ -6,6 +6,6 @@ import (
 )
 
 type Repository interface {
-	GetItem(ctx context.Context, itemID string) (*ItemStockOnHand, error)
+	GetItem(ctx context.Context, locationID string, itemID string) (*StockOnHand, error)
 	UpdateStockOnHand(ctx context.Context, itemID string, delta int) error
 }
