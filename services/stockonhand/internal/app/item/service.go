@@ -10,7 +10,7 @@ import (
 
 type Service interface {
 	GetItem(ctx context.Context, locationID string, itemID string) (*StockOnHand, error)
-	UpdateStockOnHand(ctx context.Context, itemID string, delta int) error
+	UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) error
 }
 
 type service struct {

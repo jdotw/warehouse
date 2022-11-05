@@ -62,8 +62,8 @@ func (p *repository) UpdateStockOnHand(ctx context.Context, locationID string, i
 		StockOnHand: (delta * -1),
 	}
 	tx := p.db.WithContext(ctx).Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.Assignments(map[string]interface{}{"stock_on_hand": gorm.Expr("item_stock_on_hands.stock_on_hand - ?", delta)}),
+		Columns:   []clause.Column{{Name: "item_id"}, {Name: "location_id"}},
+		DoUpdates: clause.Assignments(map[string]interface{}{"stock_on_hand": gorm.Expr("stock_on_hands.stock_on_hand - ?", delta)}),
 	}).Create(&v)
 	return tx.Error
 }

@@ -25,7 +25,8 @@ func (t *Transaction) AfterSave(tx *gorm.DB) (err error) {
 	for _, item := range t.Items {
 		wg.Add(1)
 		event := TransactionLineItemCreatedEvent{
-			LineItem: item,
+			LocationID: t.LocationID,
+			LineItem:   item,
 		}
 		json, err := json.Marshal(event)
 		if err != nil {

@@ -86,7 +86,7 @@ func main() {
 				for _, record := range p.Records {
 					var e transaction.TransactionLineItemCreatedEvent
 					json.Unmarshal(record.Value, &e)
-					err := (*itemService).UpdateStockOnHand(ctx, e.LineItem.ItemID, e.LineItem.Quantity)
+					err := (*itemService).UpdateStockOnHand(ctx, e.LocationID, e.LineItem.ItemID, e.LineItem.Quantity)
 					if err != nil {
 						logger.Bg().Error("Failed to update stock on hand", zap.String("ID", e.LineItem.ID), zap.Error(err))
 					}
