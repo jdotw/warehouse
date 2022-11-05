@@ -3,7 +3,7 @@ package transaction
 import (
 	"context"
 	_ "embed"
-	"encoding/json"
+	"time"
 
 	"github.com/go-kit/kit/endpoint"
 	kittracing "github.com/go-kit/kit/tracing/opentracing"
@@ -11,6 +11,7 @@ import (
 	"github.com/jdotw/go-utils/authz/opa"
 	"github.com/jdotw/go-utils/log"
 	"github.com/opentracing/opentracing-go"
+	"go.uber.org/zap"
 )
 
 type EndpointSet struct {
@@ -79,34 +80,29 @@ type CreateTransactionEndpointRequest struct {
 
 func makeCreateTransactionEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		logger.For(ctx).Info("Transaction.CreateTransactionEndpoint received request")
-
 		er := request.(CreateTransactionEndpointRequest)
-		// Convert endpoint request to JSON
-		erJSON, err := json.Marshal(er)
-		if err != nil {
-			return nil, err
-		}
 
-		// Create Transaction from endpoint request JSON
+		// Create the Transaction
 		var sr Transaction
-		json.Unmarshal(erJSON, &sr)
-
-		// Set variables from path parameters
-
-		//
-		// TODO: Review the code above.
-		//       The JSON marshalling isn't ideal.
-		//       You should manually construct the struct being passed
-		//       to the service from variables in the endpoint request
-		//
+		sr.LocationID = er.LocationID
+		if er.Timestamp != nil {
+			sr.Timestamp = *er.Timestamp
+		} else {
+			sr.Timestamp = time.Now()
+		}
+		sr.Items = make([]TransactionLineItem, len(er.Items))
+		for i, el := range er.Items {
+			var sl TransactionLineItem
+			sl.ItemID = el.ItemID
+			sl.Quantity = el.Quantity
+			sr.Items[i] = sl
+		}
 
 		v, err := s.CreateTransaction(ctx, &sr)
 		if err != nil {
 			return &v, err
 		}
 		return &v, nil
-
 	}
 }
 
@@ -123,6 +119,7 @@ func makeGetTransactionEndpoint(s Service, logger log.Factory, tracer opentracin
 		er := request.(GetTransactionEndpointRequest)
 		v, err := s.GetTransaction(ctx, er.TransactionID)
 		if err != nil {
+			logger.For(ctx).Error("GetTransactionEndpoint failed", zap.Error(err))
 			return &v, err
 		}
 		return &v, nil
