@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"encoding/json"
 	"sync"
+	"time"
 
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/recorderrors"
@@ -17,7 +18,8 @@ import (
 )
 
 type repository struct {
-	db *gorm.DB
+	db     *gorm.DB
+	logger log.Factory
 }
 
 func (t *Transaction) AfterSave(tx *gorm.DB) (err error) {
@@ -56,10 +58,23 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
+		maxOpenConn := 90
+
+		sqlDB, err := db.DB()
+		sqlDB.SetMaxIdleConns(maxOpenConn)
+		sqlDB.SetMaxOpenConns(maxOpenConn)
+		sqlDB.SetConnMaxLifetime(time.Hour)
+
 		// DO NOT AutoMigrate Transaction and/or TransactionLineItem here
 		// They are already AutoMigrated in Item's repository-gorm
 
-		r = &repository{db: db}
+		r = &repository{db: db, logger: logger}
+
+		// Preheat the DB connections by pinging
+		// in parallel up to the maxOpenConn count
+		for i := 0; i < maxOpenConn; i++ {
+			go sqlDB.Ping()
+		}
 	}
 
 	return r, nil
@@ -78,6 +93,7 @@ func (p *repository) CreateTransaction(ctx context.Context, transaction *Transac
 	var tx *gorm.DB
 	tx = p.db.WithContext(ctx).Create(transaction)
 	if tx.Error != nil {
+		p.logger.For(ctx).Error("repository.CreateTransaction failed", zap.Error(tx.Error))
 		return nil, tx.Error
 	}
 	return transaction, nil
