@@ -47,7 +47,7 @@ func (p *repository) GetItem(ctx context.Context, itemID string) (*ItemStockOnHa
 	var v ItemStockOnHand
 	// TODO: Check the .First query as codegen is not able
 	// to elegantly deal with multiple request parameters
-	tx := p.db.WithContext(ctx).Model(&ItemStockOnHand{}).First(&v, "item_id = ? ", itemID)
+	tx := p.db.WithContext(ctx).Model(&ItemStockOnHand{}).First(&v, "id = ? ", itemID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
