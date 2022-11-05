@@ -10,7 +10,7 @@ import (
 
 type Service interface {
 	GetItem(ctx context.Context, locationID string, itemID string) (*StockOnHand, error)
-	UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) error
+	UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) (int, error)
 }
 
 type service struct {
@@ -32,7 +32,7 @@ func (f *service) GetItem(ctx context.Context, locationID string, itemID string)
 	return v, err
 }
 
-func (f *service) UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) error {
-	err := f.repository.UpdateStockOnHand(ctx, locationID, itemID, delta)
-	return err
+func (f *service) UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) (int, error) {
+	soh, err := f.repository.UpdateStockOnHand(ctx, locationID, itemID, delta)
+	return soh, err
 }

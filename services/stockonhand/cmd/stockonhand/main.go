@@ -86,10 +86,11 @@ func main() {
 				for _, record := range p.Records {
 					var e transaction.TransactionLineItemCreatedEvent
 					json.Unmarshal(record.Value, &e)
-					err := (*itemService).UpdateStockOnHand(ctx, e.LocationID, e.LineItem.ItemID, e.LineItem.Quantity)
+					soh, err := (*itemService).UpdateStockOnHand(ctx, e.LocationID, e.LineItem.ItemID, e.LineItem.Quantity)
 					if err != nil {
 						logger.Bg().Error("Failed to update stock on hand", zap.String("ID", e.LineItem.ID), zap.Error(err))
 					}
+					logger.Bg().Info("Will post to redis", zap.Int("soh", soh))
 					logger.Bg().Info("Received 'created' event for transaction line item", zap.String("ID", e.LineItem.ID))
 				}
 			})

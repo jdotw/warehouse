@@ -15,7 +15,8 @@ import (
 )
 
 type repository struct {
-	db *gorm.DB
+	db     *gorm.DB
+	logger log.Factory
 }
 
 func NewGormRepository(ctx context.Context, connString string, logger log.Factory, tracer opentracing.Tracer) (Repository, error) {
@@ -38,7 +39,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 			logger.For(ctx).Fatal("Failed to migrate db for type StockOnHand", zap.Error(err))
 		}
 
-		r = &repository{db: db}
+		r = &repository{db: db, logger: logger}
 	}
 
 	return r, nil
@@ -55,7 +56,7 @@ func (p *repository) GetItem(ctx context.Context, locationID string, itemID stri
 	return &v, tx.Error
 }
 
-func (p *repository) UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) error {
+func (p *repository) UpdateStockOnHand(ctx context.Context, locationID string, itemID string, delta int) (int, error) {
 	v := StockOnHand{
 		ItemID:      itemID,
 		LocationID:  locationID,
@@ -64,6 +65,9 @@ func (p *repository) UpdateStockOnHand(ctx context.Context, locationID string, i
 	tx := p.db.WithContext(ctx).Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "item_id"}, {Name: "location_id"}},
 		DoUpdates: clause.Assignments(map[string]interface{}{"stock_on_hand": gorm.Expr("stock_on_hands.stock_on_hand - ?", delta)}),
+	}, clause.Returning{
+		Columns: []clause.Column{{Name: "stock_on_hand"}},
 	}).Create(&v)
-	return tx.Error
+	p.logger.For(ctx).Info("Updated stock on hand", zap.String("item_id", v.ItemID), zap.String("location_id", v.LocationID), zap.Int("stock_on_hand", v.StockOnHand))
+	return v.StockOnHand, tx.Error
 }
