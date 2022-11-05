@@ -4,9 +4,12 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/tracing"
@@ -35,6 +38,13 @@ func main() {
 		panic(err)
 	}
 	defer cl.Close()
+
+	// Redis Client
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: os.Getenv("REDIS_PASSWORD"), // no password set
+		DB:       0,                           // use default DB
+	})
 
 	// HTTP Router
 	r := mux.NewRouter()
@@ -86,12 +96,16 @@ func main() {
 				for _, record := range p.Records {
 					var e transaction.TransactionLineItemCreatedEvent
 					json.Unmarshal(record.Value, &e)
+					logger.Bg().Info("Received 'created' event for transaction line item", zap.String("ID", e.LineItem.ID))
 					soh, err := (*itemService).UpdateStockOnHand(ctx, e.LocationID, e.LineItem.ItemID, e.LineItem.Quantity)
 					if err != nil {
 						logger.Bg().Error("Failed to update stock on hand", zap.String("ID", e.LineItem.ID), zap.Error(err))
 					}
-					logger.Bg().Info("Will post to redis", zap.Int("soh", soh))
-					logger.Bg().Info("Received 'created' event for transaction line item", zap.String("ID", e.LineItem.ID))
+					k := fmt.Sprintf("%s:%s", e.LocationID, e.LineItem.ItemID)
+					err = rdb.Set(ctx, k, strconv.Itoa(soh), 0).Err()
+					if err != nil {
+						logger.Bg().Error("Failed to update stock on hand cache", zap.String("ID", e.LineItem.ID), zap.Error(err))
+					}
 				}
 			})
 		}
