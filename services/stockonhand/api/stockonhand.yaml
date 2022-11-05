@@ -8,14 +8,15 @@ paths:
   #
   # Items
   #
-  /items/{item_id}:
+  /locations/{location_id}/items/{item_id}:
     get:
       tags:
         - Item
-      summary: Get Stock on Hand for specfic Item
-      description: Get Stock on Hand for specfic Item
+      summary: Get Stock on Hand for an Item at a Location
+      description: Get Stock on Hand for an Item at a Location
       operationId: GetItem
       parameters:
+        - $ref: "#/components/parameters/LocationID"
         - $ref: "#/components/parameters/ItemID"
       responses:
         "200":
@@ -23,7 +24,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ItemStockOnHand"
+                $ref: "#/components/schemas/StockOnHand"
         "400":
           $ref: "#/components/responses/BadRequestError"
         "404":
@@ -37,20 +38,25 @@ components:
     #
     # Item
     #
-    ItemStockOnHand:
-      description: Stock on Hand for an Item
+    StockOnHand:
+      description: Stock on Hand for an Item at a Location
       type: object
       properties:
-        id:
+        item_id:
           type: string
           x-oapi-codegen-extra-tags:
-            gorm: "primaryKey;unique;type:uuid;"
+            gorm: "primaryKey;type:uuid;"
+        location_id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;type:uuid;"
         stock-on-hand:
           type: integer
           x-oapi-codegen-extra-tags:
             gorm: "not null"
       required:
-        - id
+        - item_id
+        - location_id
         - stock-on-hand
     # Errors
     HTTPError:
@@ -61,6 +67,14 @@ components:
   parameters:
     ItemID:
       name: item_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    LocationID:
+      name: location_id
       in: path
       required: true
       style: simple
