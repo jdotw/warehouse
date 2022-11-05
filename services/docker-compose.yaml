@@ -24,7 +24,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: postgres
-    command: ["postgres", "-c", "log_statement=all"]
+    command: ["postgres", "-c", "log_statement=none"]
   redpanda:
     image: docker.redpanda.com/vectorized/redpanda:latest
     container_name: redpanda-1
