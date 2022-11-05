@@ -1,0 +1,112 @@
+openapi: "3.0.2"
+info:
+  title: Stock API
+  version: "1.0"
+servers:
+  - url: https://api.server.test/v1
+paths:
+  #
+  # Items
+  #
+  /items/{item_id}:
+    get:
+      tags:
+        - Item
+      summary: Get Stock on Hand for specfic Item
+      description: Get Stock on Hand for specfic Item
+      operationId: GetItem
+      parameters:
+        - $ref: "#/components/parameters/ItemID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemStockOnHand"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  schemas:
+    # Objects
+    #
+    # Item
+    #
+    ItemStockOnHand:
+      description: Stock on Hand for an Item
+      type: object
+      properties:
+        id:
+          type: string
+          x-oapi-codegen-extra-tags:
+            gorm: "primaryKey;unique;type:uuid;"
+        stock-on-hand:
+          type: integer
+          x-oapi-codegen-extra-tags:
+            gorm: "not null"
+      required:
+        - id
+        - stock-on-hand
+    # Errors
+    HTTPError:
+      type: object
+      properties:
+        message:
+          type: string
+  parameters:
+    ItemID:
+      name: item_id
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+  responses:
+    HTTPError:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HTTPError"
+    BadRequestError:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HTTPError"
+    UnauthorizedError:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HTTPError"
+    ForbiddenError:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HTTPError"
+    NotFoundError:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HTTPError"
+    TooManyRequestsError:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HTTPError"
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HTTPError"
