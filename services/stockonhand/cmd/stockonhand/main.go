@@ -46,7 +46,7 @@ func main() {
 		httpHost := os.Getenv("HTTP_LISTEN_HOST")
 		httpPort := os.Getenv("HTTP_LISTEN_PORT")
 		if len(httpPort) == 0 {
-			httpPort = "8081"
+			httpPort = "8083"
 		}
 		httpAddr := httpHost + ":" + httpPort
 		logger.Bg().Info("Listening", zap.String("transport", "http"), zap.String("host", httpHost), zap.String("port", httpPort), zap.String("addr", httpAddr))
