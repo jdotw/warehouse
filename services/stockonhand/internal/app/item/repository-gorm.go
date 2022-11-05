@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	gormopentracing "gorm.io/plugin/opentracing"
 )
 
@@ -52,4 +53,16 @@ func (p *repository) GetItem(ctx context.Context, itemID string) (*ItemStockOnHa
 		return nil, recorderrors.ErrNotFound
 	}
 	return &v, tx.Error
+}
+
+func (p *repository) UpdateStockOnHand(ctx context.Context, itemID string, delta int) error {
+	v := ItemStockOnHand{
+		ID:          itemID,
+		StockOnHand: (delta * -1),
+	}
+	tx := p.db.WithContext(ctx).Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.Assignments(map[string]interface{}{"stock_on_hand": gorm.Expr("item_stock_on_hands.stock_on_hand - ?", delta)}),
+	}).Create(&v)
+	return tx.Error
 }

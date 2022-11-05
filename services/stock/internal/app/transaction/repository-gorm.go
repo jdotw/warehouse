@@ -32,7 +32,7 @@ func (t *Transaction) AfterSave(tx *gorm.DB) (err error) {
 			return err
 			t.logger.For(t.ctx).Error("Failed to marshall transaction line item", zap.Error(err))
 		} else {
-			record := &kgo.Record{Topic: "warehouse.stock.transaction.line_item", Value: json}
+			record := &kgo.Record{Topic: "warehouse.stock.transaction.line_item.created", Value: json}
 			t.kafka.Produce(t.ctx, record, func(_ *kgo.Record, err error) {
 				defer wg.Done()
 				if err != nil {
