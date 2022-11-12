@@ -13,18 +13,27 @@ services:
       - ./prometheus:/etc/prometheus
       - prometheus-data:/prometheus
     command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yaml
-  db:
-    image: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
-      - ./db/init:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: postgres
-    command: ["postgres", "-c", "log_statement=none"]
+  # db:
+  #   image: postgres
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - db-data:/var/lib/postgresql/data
+  #     - ./db/init:/docker-entrypoint-initdb.d
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     POSTGRES_DB: postgres
+  #   command:
+  #     [
+  #       "postgres",
+  #       "-c",
+  #       "log_statement=none",
+  #       "-c",
+  #       "max_connections=1000",
+  #       "-c",
+  #       "shared_buffers=512MB",
+  #     ]
   redpanda:
     image: docker.redpanda.com/vectorized/redpanda:latest
     container_name: redpanda-1
@@ -61,8 +70,61 @@ services:
     volumes:
       - cache-data:/data
 
+  # influxdb:
+  #   image: influxdb:latest
+  #   container_name: influxdb2
+  #   volumes:
+  #     - ./influxdb2/etc:/etc/influxdb2
+  #     - influxdb2:/var/lib/influxdb2:rw
+  #   # env_file:
+  #   #   - influx.setup.env
+  #   # entrypoint: ["./entrypoint.sh"]
+  #   ports:
+  #     - 8086:8086
+  #   restart: unless-stopped
+
+  # influxdb:
+  #   restart: unless-stopped
+  #   container_name: influxdb
+  #   image: influxdb:1.8
+  #   volumes:
+  #     - ./influxdb/etc:/etc/influxdb
+  #     - influxdb-lib:/var/lib/influxdb
+  #   env_file:
+  #     - ./.env
+  #   ports:
+  #     - 8083:8083
+  #     - 8086:8086
+  #     - 8088:8088
+  #   privileged: true
+
+  grafana:
+    image: grafana/grafana:latest
+    # networks:
+    #   - grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
+
+  # grafana:
+  #   image: grafana/grafana:7.5.7
+  #   ports:
+  #     - 3000:3000
+  #   restart: unless-stopped
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+
 volumes:
   prometheus-data:
   db-data:
   cache-data:
     driver: local
+  influxdb2:
+  # influxdb-lib:
+  grafana-data:
