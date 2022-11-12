@@ -6,18 +6,14 @@ export default function () {
 	"items": [
 		{
 			"quantity": 2,
-			"item_id": "9fcb59b5-9b2a-4759-abb7-6b2809cb47e8"
-		},
-		{
-			"quantity": -2,
-			"item_id": "9fcb59b5-9b2a-4759-abb7-6b2809cb47e8"
+			"item_id": "abfdd2a2-cd55-4e51-b6eb-d3ae0dde8f8e",
 		},
 		{
 			"quantity": 1,
-			"item_id": "557adb58-8b4d-4d06-85ed-ced7b5ff22fc"
+			"item_id": "17b593bb-f0db-4707-861a-53a8a3f41e7e"
 		}		
 	],
-	"location_id": "5996ff4d-725d-42c8-953e-99b47412db14"
+	"location_id": "35f3c5d9-2950-4f58-b962-1557d374909e"
   });
 
   const params = {
