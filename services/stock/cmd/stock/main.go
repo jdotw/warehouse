@@ -13,12 +13,15 @@ import (
 	itemapp "github.com/jdotw/stock/internal/app/item"
 	locationapp "github.com/jdotw/stock/internal/app/location"
 	transactionapp "github.com/jdotw/stock/internal/app/transaction"
+	"github.com/joho/godotenv"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"go.uber.org/zap"
 )
 
 func main() {
+	godotenv.Load(".env")
+
 	serviceName := "stock"
 
 	// Logging and Tracing
@@ -83,7 +86,8 @@ func main() {
 	}
 
 	// HTTP Mux
-	m := tracing.NewServeMux(tracer)
+	// m := tracing.NewServeMux(tracer)
+	m := http.NewServeMux()
 	m.Handle("/metrics", promhttp.Handler()) // Prometheus
 	m.Handle("/", r)
 

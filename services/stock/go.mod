@@ -7,6 +7,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/jdotw/codegen-go v0.0.0-20221016014155-fe260c778054
 	github.com/jdotw/go-utils v0.0.0-20221022032130-f91f85b8bba1
+	github.com/joho/godotenv v1.4.0
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/twmb/franz-go v1.9.0

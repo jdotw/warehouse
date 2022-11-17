@@ -35,7 +35,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 		// structs here, and also location's Location struct, so that the correct
 		// ForeignKey relationship is established between them
 
-		err = db.AutoMigrate(&Item{}, &transaction.Transaction{}, &transaction.TransactionLineItem{}, &location.Location{})
+		err = db.AutoMigrate(&Item{}, &location.Location{}, &transaction.Transaction{}, &transaction.TransactionLineItem{})
 		if err != nil {
 			logger.For(ctx).Fatal("Failed to migrate db for type Item", zap.Error(err))
 		}

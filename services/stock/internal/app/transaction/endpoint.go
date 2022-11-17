@@ -6,9 +6,6 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/endpoint"
-	kittracing "github.com/go-kit/kit/tracing/opentracing"
-	"github.com/jdotw/go-utils/authn/jwt"
-	"github.com/jdotw/go-utils/authz/opa"
 	"github.com/jdotw/go-utils/log"
 	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
@@ -24,29 +21,29 @@ type EndpointSet struct {
 var endpointPolicy string
 
 func NewEndpointSet(s Service, logger log.Factory, tracer opentracing.Tracer) EndpointSet {
-	authn := jwt.NewAuthenticator(logger, tracer)
-	authz := opa.NewAuthorizor(logger, tracer)
+	// authn := jwt.NewAuthenticator(logger, tracer)
+	// authz := opa.NewAuthorizor(logger, tracer)
 
 	var getTransactionsEndpoint endpoint.Endpoint
 	{
 		getTransactionsEndpoint = makeGetTransactionsEndpoint(s, logger, tracer)
-		getTransactionsEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.transaction.endpoint.authz.get_transactions")(getTransactionsEndpoint)
-		getTransactionsEndpoint = authn.NewMiddleware()(getTransactionsEndpoint)
-		getTransactionsEndpoint = kittracing.TraceServer(tracer, "GetTransactionsEndpoint")(getTransactionsEndpoint)
+		// getTransactionsEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.transaction.endpoint.authz.get_transactions")(getTransactionsEndpoint)
+		// getTransactionsEndpoint = authn.NewMiddleware()(getTransactionsEndpoint)
+		// getTransactionsEndpoint = kittracing.TraceServer(tracer, "GetTransactionsEndpoint")(getTransactionsEndpoint)
 	}
 	var createTransactionEndpoint endpoint.Endpoint
 	{
 		createTransactionEndpoint = makeCreateTransactionEndpoint(s, logger, tracer)
-		createTransactionEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.transaction.endpoint.authz.create_transaction")(createTransactionEndpoint)
-		createTransactionEndpoint = authn.NewMiddleware()(createTransactionEndpoint)
-		createTransactionEndpoint = kittracing.TraceServer(tracer, "CreateTransactionEndpoint")(createTransactionEndpoint)
+		// createTransactionEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.transaction.endpoint.authz.create_transaction")(createTransactionEndpoint)
+		// createTransactionEndpoint = authn.NewMiddleware()(createTransactionEndpoint)
+		// createTransactionEndpoint = kittracing.TraceServer(tracer, "CreateTransactionEndpoint")(createTransactionEndpoint)
 	}
 	var getTransactionEndpoint endpoint.Endpoint
 	{
 		getTransactionEndpoint = makeGetTransactionEndpoint(s, logger, tracer)
-		getTransactionEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.transaction.endpoint.authz.get_transaction")(getTransactionEndpoint)
-		getTransactionEndpoint = authn.NewMiddleware()(getTransactionEndpoint)
-		getTransactionEndpoint = kittracing.TraceServer(tracer, "GetTransactionEndpoint")(getTransactionEndpoint)
+		// getTransactionEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.transaction.endpoint.authz.get_transaction")(getTransactionEndpoint)
+		// getTransactionEndpoint = authn.NewMiddleware()(getTransactionEndpoint)
+		// getTransactionEndpoint = kittracing.TraceServer(tracer, "GetTransactionEndpoint")(getTransactionEndpoint)
 	}
 	return EndpointSet{
 		GetTransactionsEndpoint:   getTransactionsEndpoint,
