@@ -58,7 +58,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
-		maxOpenConn := 900
+		maxOpenConn := 10
 
 		sqlDB, err := db.DB()
 		sqlDB.SetMaxIdleConns(maxOpenConn)
@@ -82,7 +82,8 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 func (p *repository) GetTransactions(ctx context.Context) (*[]Transaction, error) {
 	var v []Transaction
-	tx := p.db.WithContext(ctx).Model(&Transaction{}).Preload("Items").Find(&v)
+	// tx := p.db.WithContext(ctx).Model(&Transaction{}).Limit(5).Preload("Items").Find(&v)
+	tx := p.db.WithContext(ctx).Model(&Transaction{}).Limit(5).Find(&v)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}
@@ -101,7 +102,8 @@ func (p *repository) CreateTransaction(ctx context.Context, transaction *Transac
 
 func (p *repository) GetTransaction(ctx context.Context, transactionID string) (*Transaction, error) {
 	var v Transaction
-	tx := p.db.WithContext(ctx).Model(&Transaction{}).Preload("Items").First(&v, "id = ? ", transactionID)
+	// tx := p.db.WithContext(ctx).Model(&Transaction{}).Preload("Items").First(&v, "id = ? ", transactionID)
+	tx := p.db.WithContext(ctx).Model(&Transaction{}).First(&v, "id = ? ", transactionID)
 	if tx.Error == gorm.ErrRecordNotFound {
 		return nil, recorderrors.ErrNotFound
 	}

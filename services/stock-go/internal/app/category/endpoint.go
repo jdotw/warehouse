@@ -6,9 +6,6 @@ import (
 	"encoding/json"
 
 	"github.com/go-kit/kit/endpoint"
-	kittracing "github.com/go-kit/kit/tracing/opentracing"
-	"github.com/jdotw/go-utils/authn/jwt"
-	"github.com/jdotw/go-utils/authz/opa"
 	"github.com/jdotw/go-utils/log"
 	"github.com/opentracing/opentracing-go"
 )
@@ -25,43 +22,43 @@ type EndpointSet struct {
 var endpointPolicy string
 
 func NewEndpointSet(s Service, logger log.Factory, tracer opentracing.Tracer) EndpointSet {
-	authn := jwt.NewAuthenticator(logger, tracer)
-	authz := opa.NewAuthorizor(logger, tracer)
+	// authn := jwt.NewAuthenticator(logger, tracer)
+	// authz := opa.NewAuthorizor(logger, tracer)
 
 	var getCategoriesEndpoint endpoint.Endpoint
 	{
 		getCategoriesEndpoint = makeGetCategoriesEndpoint(s, logger, tracer)
-		getCategoriesEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.get_categories")(getCategoriesEndpoint)
-		getCategoriesEndpoint = authn.NewMiddleware()(getCategoriesEndpoint)
-		getCategoriesEndpoint = kittracing.TraceServer(tracer, "GetCategoriesEndpoint")(getCategoriesEndpoint)
+		// getCategoriesEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.get_categories")(getCategoriesEndpoint)
+		// getCategoriesEndpoint = authn.NewMiddleware()(getCategoriesEndpoint)
+		// getCategoriesEndpoint = kittracing.TraceServer(tracer, "GetCategoriesEndpoint")(getCategoriesEndpoint)
 	}
 	var createCategoryEndpoint endpoint.Endpoint
 	{
 		createCategoryEndpoint = makeCreateCategoryEndpoint(s, logger, tracer)
-		createCategoryEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.create_category")(createCategoryEndpoint)
-		createCategoryEndpoint = authn.NewMiddleware()(createCategoryEndpoint)
-		createCategoryEndpoint = kittracing.TraceServer(tracer, "CreateCategoryEndpoint")(createCategoryEndpoint)
+		// createCategoryEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.create_category")(createCategoryEndpoint)
+		// createCategoryEndpoint = authn.NewMiddleware()(createCategoryEndpoint)
+		// createCategoryEndpoint = kittracing.TraceServer(tracer, "CreateCategoryEndpoint")(createCategoryEndpoint)
 	}
 	var deleteCategoryEndpoint endpoint.Endpoint
 	{
 		deleteCategoryEndpoint = makeDeleteCategoryEndpoint(s, logger, tracer)
-		deleteCategoryEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.delete_category")(deleteCategoryEndpoint)
-		deleteCategoryEndpoint = authn.NewMiddleware()(deleteCategoryEndpoint)
-		deleteCategoryEndpoint = kittracing.TraceServer(tracer, "DeleteCategoryEndpoint")(deleteCategoryEndpoint)
+		// deleteCategoryEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.delete_category")(deleteCategoryEndpoint)
+		// deleteCategoryEndpoint = authn.NewMiddleware()(deleteCategoryEndpoint)
+		// deleteCategoryEndpoint = kittracing.TraceServer(tracer, "DeleteCategoryEndpoint")(deleteCategoryEndpoint)
 	}
 	var getCategoryEndpoint endpoint.Endpoint
 	{
 		getCategoryEndpoint = makeGetCategoryEndpoint(s, logger, tracer)
-		getCategoryEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.get_category")(getCategoryEndpoint)
-		getCategoryEndpoint = authn.NewMiddleware()(getCategoryEndpoint)
-		getCategoryEndpoint = kittracing.TraceServer(tracer, "GetCategoryEndpoint")(getCategoryEndpoint)
+		// getCategoryEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.get_category")(getCategoryEndpoint)
+		// getCategoryEndpoint = authn.NewMiddleware()(getCategoryEndpoint)
+		// getCategoryEndpoint = kittracing.TraceServer(tracer, "GetCategoryEndpoint")(getCategoryEndpoint)
 	}
 	var updateCategoryEndpoint endpoint.Endpoint
 	{
 		updateCategoryEndpoint = makeUpdateCategoryEndpoint(s, logger, tracer)
-		updateCategoryEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.update_category")(updateCategoryEndpoint)
-		updateCategoryEndpoint = authn.NewMiddleware()(updateCategoryEndpoint)
-		updateCategoryEndpoint = kittracing.TraceServer(tracer, "UpdateCategoryEndpoint")(updateCategoryEndpoint)
+		// updateCategoryEndpoint = authz.NewInProcessMiddleware(endpointPolicy, "data.category.endpoint.authz.update_category")(updateCategoryEndpoint)
+		// updateCategoryEndpoint = authn.NewMiddleware()(updateCategoryEndpoint)
+		// updateCategoryEndpoint = kittracing.TraceServer(tracer, "UpdateCategoryEndpoint")(updateCategoryEndpoint)
 	}
 	return EndpointSet{
 		GetCategoriesEndpoint:  getCategoriesEndpoint,
@@ -73,7 +70,6 @@ func NewEndpointSet(s Service, logger log.Factory, tracer opentracing.Tracer) En
 }
 
 // GetCategories
-
 
 func makeGetCategoriesEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {

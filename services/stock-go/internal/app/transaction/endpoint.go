@@ -56,8 +56,6 @@ func NewEndpointSet(s Service, logger log.Factory, tracer opentracing.Tracer) En
 
 func makeGetTransactionsEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		logger.For(ctx).Info("Transaction.GetTransactionsEndpoint received request")
-
 		v, err := s.GetTransactions(ctx)
 		if err != nil {
 			return &v, err
@@ -111,8 +109,6 @@ type GetTransactionEndpointRequest struct {
 
 func makeGetTransactionEndpoint(s Service, logger log.Factory, tracer opentracing.Tracer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		logger.For(ctx).Info("Transaction.GetTransactionEndpoint received request")
-
 		er := request.(GetTransactionEndpointRequest)
 		v, err := s.GetTransaction(ctx, er.TransactionID)
 		if err != nil {
