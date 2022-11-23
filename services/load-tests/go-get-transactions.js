@@ -1,7 +1,7 @@
 import http from 'k6/http';
 
 export default function () {
-  const url = 'http://localhost:5003/WeatherForecast';
+  const url = 'http://localhost:8080/transactions';
 
   const params = {
     headers: {
