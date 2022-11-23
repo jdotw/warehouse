@@ -12,3 +12,8 @@ Cargo.lock
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
+
+#Diesel
+!diesel_cli/Cargo.lock
+.env
+*.snap.new
