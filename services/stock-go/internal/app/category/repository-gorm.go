@@ -3,6 +3,7 @@ package category
 import (
 	"context"
 	_ "embed"
+	"time"
 
 	"github.com/jdotw/go-utils/log"
 	"github.com/jdotw/go-utils/recorderrors"
@@ -27,6 +28,13 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
+		maxOpenConn := 10
+
+		sqlDB, err := db.DB()
+		sqlDB.SetMaxIdleConns(maxOpenConn)
+		sqlDB.SetMaxOpenConns(maxOpenConn)
+		sqlDB.SetConnMaxLifetime(time.Hour)
+
 		// TODO: Ensure these migrations are correct
 		// The OpenAPI Spec used to generate this code often uses
 		// results in AutoMigrate statements being generated for
@@ -43,6 +51,13 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 		}
 
 		r = &repository{db: db}
+
+		// Preheat the DB connections by pinging
+		// in parallel up to the maxOpenConn count
+		for i := 0; i < maxOpenConn; i++ {
+			go sqlDB.Ping()
+		}
+
 	}
 
 	return r, nil
