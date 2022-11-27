@@ -1,3 +1,6 @@
+// #[global_allocator]
+// static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+
 use self::models::*;
 use self::schema::categories::dsl as schema;
 use diesel::prelude::*;

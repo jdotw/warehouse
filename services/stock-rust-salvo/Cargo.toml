@@ -17,6 +17,7 @@ bb8 = "0.8.0"
 bb8-postgres = "0.8.1"
 bb8-diesel = "0.2.1"
 bytes = "1"
+snmalloc-rs = { version = "0.3", features = ["native-cpu","build_cc"] }
 
 [dependencies.uuid]
 version = "1.2.2"
