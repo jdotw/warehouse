@@ -1,10 +1,10 @@
-use std::str::FromStr;
-
 use self::models::*;
 use self::schema::categories::dsl as schema;
 use diesel::prelude::*;
 use once_cell::sync::OnceCell;
 use salvo::prelude::*;
+use std::str::FromStr;
+use std::sync::Arc;
 use stock_rust_salvo::*;
 use uuid::Uuid;
 
@@ -12,12 +12,16 @@ static POOL: OnceCell<PgPool> = OnceCell::new();
 
 #[handler]
 async fn get_categories(res: &mut Response) {
-    let pool = POOL.get().expect("pool is not initialized");
-    let connection = &mut pool.get().unwrap();
-    let results = schema::categories
-        .limit(5)
-        .load::<Category>(connection)
-        .expect("Error loading categories");
+    let results = tokio::task::spawn_blocking(|| {
+        let pool = POOL.get().expect("pool is not initialized");
+        let connection = &mut pool.get().unwrap();
+        schema::categories
+            .limit(5)
+            .load::<Category>(connection)
+            .expect("Error loading categories")
+    })
+    .await
+    .unwrap();
 
     res.render(Json(results));
 }
@@ -31,7 +35,6 @@ async fn create_category(req: &mut Request, res: &mut Response) {
         .values(&category)
         .get_result::<Category>(connection)
         .expect("Error creating new category");
-
     res.render(Json(result));
 }
 
@@ -63,25 +66,25 @@ async fn get_category(req: &Request, res: &mut Response) {
     res.render(Json(results));
 }
 
-fn router() -> Router {
-    Router::new().push(
-        Router::with_path("categories")
-            .get(get_categories)
-            .post(create_category)
-            .push(
-                Router::with_path("<id>")
-                    .get(get_category)
-                    .patch(update_category),
-            ),
-    )
-}
-
 #[tokio::main()]
 async fn main() {
     let pool = create_pool();
     POOL.set(pool).unwrap();
-    let router = router();
+
+    let router = Arc::new(
+        Router::new().push(
+            Router::with_path("categories")
+                .get(get_categories)
+                .post(create_category)
+                .push(
+                    Router::with_path("<id>")
+                        .get(get_category)
+                        .patch(update_category),
+                ),
+        ),
+    );
+
     Server::new(TcpListener::bind("0.0.0.0:7878"))
-        .serve(router)
+        .serve(Service::new(router))
         .await;
 }
