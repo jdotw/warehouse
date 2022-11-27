@@ -28,7 +28,7 @@ func NewGormRepository(ctx context.Context, connString string, logger log.Factor
 
 		db.Use(gormopentracing.New(gormopentracing.WithTracer(tracer)))
 
-		maxOpenConn := 10
+		maxOpenConn := 100
 
 		sqlDB, err := db.DB()
 		sqlDB.SetMaxIdleConns(maxOpenConn)
