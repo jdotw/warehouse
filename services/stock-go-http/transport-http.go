@@ -35,7 +35,7 @@ func NewHTTPTransport(r Repository) HTTPTransport {
 }
 
 func (t HTTPTransport) Serve() {
-	gc := GetCategoriesHandler{
+	gc := &GetCategoriesHandler{
 		r: t.r,
 	}
 	http.Handle("/categories", gc)

@@ -16,8 +16,9 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	// t := NewHTTPTransport(r)
-	t := NewGinTransport(r)
+	//t := NewHTTPTransport(r) // 33k tps
+	//t := NewGinTransport(r) // 33k tps
+	t := NewFiberTransport(r) // 33k tps
 
 	t.Serve()
 }

@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type repository struct {
@@ -16,7 +17,9 @@ type repository struct {
 func NewGormRepository(ctx context.Context, connString string) (Repository, error) {
 	var r Repository
 	{
-		db, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
+		db, err := gorm.Open(postgres.Open(connString), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Silent),
+		})
 		if err != nil {
 			log.Fatalf("Failed to open db: %v", err)
 		}
@@ -24,6 +27,9 @@ func NewGormRepository(ctx context.Context, connString string) (Repository, erro
 		maxOpenConn := 100
 
 		sqlDB, err := db.DB()
+		if err != nil {
+			panic(err)
+		}
 		sqlDB.SetMaxIdleConns(maxOpenConn)
 		sqlDB.SetMaxOpenConns(maxOpenConn)
 		sqlDB.SetConnMaxLifetime(time.Hour)
