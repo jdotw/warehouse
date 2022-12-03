@@ -7,17 +7,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type FiberTransport struct {
+type fiberTransport struct {
 	r Repository
 }
 
-func NewFiberTransport(r Repository) FiberTransport {
-	return FiberTransport{
+func NewFiberTransport(r Repository) Transport {
+	return fiberTransport{
 		r: r,
 	}
 }
 
-func (t FiberTransport) getCategories(c *fiber.Ctx) error {
+func (t fiberTransport) getCategories(c *fiber.Ctx) error {
 	v, err := t.r.GetCategories(context.Background())
 	if err != nil {
 		panic(err)
@@ -25,7 +25,7 @@ func (t FiberTransport) getCategories(c *fiber.Ctx) error {
 	return c.JSON(v)
 }
 
-func (t FiberTransport) Serve() {
+func (t fiberTransport) Serve() {
 	app := fiber.New()
 	app.Get("/categories", t.getCategories)
 	log.Fatal(app.Listen(":8080"))

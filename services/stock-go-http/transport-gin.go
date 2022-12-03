@@ -7,17 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GinTransport struct {
+type ginTransport struct {
 	r Repository
 }
 
-func NewGinTransport(r Repository) GinTransport {
-	return GinTransport{
+func NewGinTransport(r Repository) Transport {
+	return ginTransport{
 		r: r,
 	}
 }
 
-func (t GinTransport) getCategories(c *gin.Context) {
+func (t ginTransport) getCategories(c *gin.Context) {
 	v, err := t.r.GetCategories(context.Background())
 	if err != nil {
 		panic(err)
@@ -25,7 +25,7 @@ func (t GinTransport) getCategories(c *gin.Context) {
 	c.JSON(http.StatusOK, v)
 }
 
-func (t GinTransport) Serve() {
+func (t ginTransport) Serve() {
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.GET("/categories", t.getCategories)

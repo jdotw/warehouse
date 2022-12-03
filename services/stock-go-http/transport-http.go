@@ -24,17 +24,17 @@ func (h GetCategoriesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	fmt.Fprint(w, string(json))
 }
 
-type HTTPTransport struct {
+type httpTransport struct {
 	r Repository
 }
 
-func NewHTTPTransport(r Repository) HTTPTransport {
-	return HTTPTransport{
+func NewHTTPTransport(r Repository) Transport {
+	return httpTransport{
 		r: r,
 	}
 }
 
-func (t HTTPTransport) Serve() {
+func (t httpTransport) Serve() {
 	gc := &GetCategoriesHandler{
 		r: t.r,
 	}
