@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"errors"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -14,30 +14,24 @@ type repository struct {
 	db *gorm.DB
 }
 
-func NewGormRepository(ctx context.Context, connString string) (Repository, error) {
+func NewGormRepository(connString string) (Repository, error) {
 	var r Repository
 	{
 		db, err := gorm.Open(postgres.Open(connString), &gorm.Config{
 			Logger: logger.Default.LogMode(logger.Silent),
 		})
-		if err != nil {
-			log.Fatalf("Failed to open db: %v", err)
-		}
-
+		ok(err)
 		maxOpenConn := 100
 
 		sqlDB, err := db.DB()
-		if err != nil {
-			panic(err)
-		}
+		ok(err)
+
 		sqlDB.SetMaxIdleConns(maxOpenConn)
 		sqlDB.SetMaxOpenConns(maxOpenConn)
 		sqlDB.SetConnMaxLifetime(time.Hour)
 
 		err = db.AutoMigrate(&Category{})
-		if err != nil {
-			log.Fatalf("Failed to migrate db for type Category: %v", err)
-		}
+		ok(err)
 
 		r = &repository{db: db}
 
@@ -58,4 +52,17 @@ func (p *repository) GetCategories(ctx context.Context) (*[]Category, error) {
 		return nil, gorm.ErrRecordNotFound
 	}
 	return &v, tx.Error
+}
+
+func (p *repository) CreateCategory(ctx context.Context, category *Category) (*Category, error) {
+	return nil, errors.New("not implemented")
+}
+func (p *repository) DeleteCategory(ctx context.Context, categoryID string) error {
+	return errors.New("not implemented")
+}
+func (p *repository) GetCategory(ctx context.Context, categoryID string) (*Category, error) {
+	return nil, errors.New("not implemented")
+}
+func (p *repository) UpdateCategory(ctx context.Context, category *Category) (*Category, error) {
+	return nil, errors.New("not implemented")
 }

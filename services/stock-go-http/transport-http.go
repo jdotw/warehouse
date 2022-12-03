@@ -9,34 +9,30 @@ import (
 )
 
 type GetCategoriesHandler struct {
-	r Repository
+	s Service
 }
 
 func (h GetCategoriesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	v, err := h.r.GetCategories(context.Background())
-	if err != nil {
-		log.Panicln(err)
-	}
+	v, err := h.s.GetCategories(context.Background())
+	ok(err)
 	json, err := json.Marshal(v)
-	if err != nil {
-		log.Panicln(err)
-	}
+	ok(err)
 	fmt.Fprint(w, string(json))
 }
 
 type httpTransport struct {
-	r Repository
+	s Service
 }
 
-func NewHTTPTransport(r Repository) Transport {
+func NewHTTPTransport(s Service) Transport {
 	return httpTransport{
-		r: r,
+		s: s,
 	}
 }
 
 func (t httpTransport) Serve() {
 	gc := &GetCategoriesHandler{
-		r: t.r,
+		s: t.s,
 	}
 	http.Handle("/categories", gc)
 	log.Fatal(http.ListenAndServe(":8080", nil))

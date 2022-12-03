@@ -8,20 +8,18 @@ import (
 )
 
 type ginTransport struct {
-	r Repository
+	s Service
 }
 
-func NewGinTransport(r Repository) Transport {
+func NewGinTransport(s Service) Transport {
 	return ginTransport{
-		r: r,
+		s: s,
 	}
 }
 
 func (t ginTransport) getCategories(c *gin.Context) {
-	v, err := t.r.GetCategories(context.Background())
-	if err != nil {
-		panic(err)
-	}
+	v, err := t.s.GetCategories(context.Background())
+	ok(err)
 	c.JSON(http.StatusOK, v)
 }
 

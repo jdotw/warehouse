@@ -8,20 +8,18 @@ import (
 )
 
 type fiberTransport struct {
-	r Repository
+	s Service
 }
 
-func NewFiberTransport(r Repository) Transport {
+func NewFiberTransport(s Service) Transport {
 	return fiberTransport{
-		r: r,
+		s: s,
 	}
 }
 
 func (t fiberTransport) getCategories(c *fiber.Ctx) error {
-	v, err := t.r.GetCategories(context.Background())
-	if err != nil {
-		panic(err)
-	}
+	v, err := t.s.GetCategories(context.Background())
+	ok(err)
 	return c.JSON(v)
 }
 
