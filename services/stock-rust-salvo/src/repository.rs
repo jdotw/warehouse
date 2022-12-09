@@ -7,7 +7,6 @@ pub mod diesel;
 
 pub trait Repository {
     fn new(connection_string: String) -> Self;
-    fn build_pool(&self) -> Result<(), Error>;
     fn get_categories(&self) -> Result<Vec<Category>, Error>;
     fn get_category(&self, id: &Uuid) -> Result<Vec<Category>, Error>;
     fn create_category(&self, category: &NewCategory) -> Result<Category, Error>;

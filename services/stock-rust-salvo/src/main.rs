@@ -88,8 +88,7 @@ async fn main() {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let repository = DieselRepository::new(database_url);
-    repository.build_pool();
+    let _repository = DieselRepository::new(database_url);
 
     let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
 
