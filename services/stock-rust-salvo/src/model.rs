@@ -1,10 +1,13 @@
+extern crate diesel;
+
 use crate::schema::categories;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Category {
-    pub id: uuid::Uuid,
+    pub id: Uuid,
     pub name: String,
 }
 
