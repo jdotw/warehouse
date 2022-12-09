@@ -3,16 +3,14 @@
 
 extern crate diesel;
 
-mod diesel_repository;
 mod model;
 mod repository;
-mod schema;
 mod server;
 
 use anyhow::Error;
-use diesel_repository::DieselRepository;
 use dotenvy::dotenv;
 use model::*;
+use repository::diesel::DieselRepository;
 use repository::Repository;
 use salvo::prelude::*;
 use std::env;

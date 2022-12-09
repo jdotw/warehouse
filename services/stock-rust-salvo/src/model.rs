@@ -1,6 +1,6 @@
 extern crate diesel;
 
-use crate::schema::categories;
+use crate::repository::diesel::schema::categories;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;

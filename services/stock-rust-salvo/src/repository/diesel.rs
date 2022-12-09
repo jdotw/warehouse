@@ -1,8 +1,10 @@
 extern crate diesel;
 
+pub mod schema;
+
 use crate::model::{Category, NewCategory, UpdateCategory};
 use crate::repository::Repository;
-use crate::schema::categories::dsl;
+use schema::categories::dsl;
 
 use anyhow::Error;
 use diesel::prelude::*;

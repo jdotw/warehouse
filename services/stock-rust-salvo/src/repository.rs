@@ -3,6 +3,8 @@ use crate::model::{Category, NewCategory, UpdateCategory};
 use anyhow::Error;
 use uuid::Uuid;
 
+pub mod diesel;
+
 pub trait Repository {
     fn new(connection_string: String) -> Self;
     fn build_pool(&self) -> Result<(), Error>;
