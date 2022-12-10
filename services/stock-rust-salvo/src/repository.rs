@@ -6,7 +6,9 @@ use uuid::Uuid;
 pub mod diesel;
 
 pub trait Repository {
-    fn new(connection_string: String) -> Self;
+    fn new(connection_string: String) -> Self
+    where
+        Self: Sized;
     fn get_categories(&self) -> Result<Vec<Category>, Error>;
     fn get_category(&self, id: &Uuid) -> Result<Vec<Category>, Error>;
     fn create_category(&self, category: &NewCategory) -> Result<Category, Error>;

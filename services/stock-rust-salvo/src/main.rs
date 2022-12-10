@@ -5,12 +5,16 @@ extern crate diesel;
 
 mod model;
 mod repository;
+mod service;
 mod transport;
 
 use dotenvy::dotenv;
 use repository::diesel::DieselRepository;
 use repository::Repository;
+use service::DefaultService;
+use service::Service;
 use std::env;
+use std::ptr::null;
 use std::thread::available_parallelism;
 use transport::salvo::SalvoTransport;
 use transport::Transport;
@@ -19,9 +23,6 @@ use transport::Transport;
 async fn main() {
     console_subscriber::init();
     dotenv().ok();
-
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let _repository = DieselRepository::new(database_url);
 
     let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
 
@@ -40,6 +41,9 @@ async fn main() {
     //     .unwrap();
     // rt.block_on(serve());
 
-    let transport = SalvoTransport::new("0.0.0.0".to_string(), 7878);
-    transport.serve().await
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let repository = DieselRepository::new(database_url);
+    let service = DefaultService::new(repository);
+    let transport = SalvoTransport::new(service, "0.0.0.0".to_string(), 7878);
+    let _result = transport.serve().await;
 }
