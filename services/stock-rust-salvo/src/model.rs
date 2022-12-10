@@ -5,7 +5,7 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Queryable, Serialize, Deserialize)]
+#[derive(Queryable, Serialize, Deserialize, Clone)]
 pub struct Category {
     pub id: Uuid,
     pub name: String,

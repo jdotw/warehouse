@@ -1,9 +1,7 @@
-extern crate diesel;
-
 pub mod schema;
 
 use crate::model::{Category, NewCategory, UpdateCategory};
-use crate::repository::Repository;
+use crate::repository::Engine;
 use schema::categories::dsl;
 
 use anyhow::Error;
@@ -11,20 +9,20 @@ use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
 use uuid::Uuid;
 
-pub struct DieselRepository {
+pub struct DieselEngine {
     pool: Pool<ConnectionManager<PgConnection>>,
 }
 
-impl DieselRepository {
+impl DieselEngine {
     fn connect(&self) -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
         self.pool.get()
     }
 }
 
-impl Repository for DieselRepository {
-    fn new(connection_string: String) -> DieselRepository {
+impl Engine for DieselEngine {
+    fn new(connection_string: String) -> DieselEngine {
         let manager = ConnectionManager::<PgConnection>::new(connection_string);
-        DieselRepository {
+        DieselEngine {
             pool: diesel::r2d2::Pool::builder()
                 .max_size(100)
                 .min_idle(Some(100))
@@ -44,14 +42,13 @@ impl Repository for DieselRepository {
             .expect("Error loading categories");
         Ok(results)
     }
-    fn get_category(&self, id: &Uuid) -> Result<Vec<Category>, Error> {
+    fn get_category(&self, id: &Uuid) -> Result<Category, Error> {
         let mut connection = self.connect().unwrap();
         let results = dsl::categories
             .filter(dsl::id.eq(id))
-            .limit(1)
             .load::<Category>(&mut connection)
             .expect("Error loading specific category");
-        return Ok(results);
+        Ok(results[0].clone())
     }
     fn create_category(&self, category: &NewCategory) -> Result<Category, Error> {
         let mut connection = self.connect().unwrap();
@@ -74,6 +71,10 @@ impl Repository for DieselRepository {
         Ok(result)
     }
     fn delete_category(&self, id: &Uuid) -> Result<(), Error> {
+        let mut connection = self.connect().unwrap();
+        diesel::delete(dsl::categories.find(id))
+            .execute(&mut connection)
+            .expect("Error deleting category");
         Ok(())
     }
 }
