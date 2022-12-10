@@ -7,17 +7,13 @@ mod model;
 mod repository;
 mod transport;
 
-use anyhow::Error;
 use dotenvy::dotenv;
-use model::*;
 use repository::diesel::DieselRepository;
 use repository::Repository;
-use salvo::prelude::*;
 use std::env;
 use std::thread::available_parallelism;
 use transport::salvo::SalvoTransport;
 use transport::Transport;
-use uuid::Uuid;
 
 #[tokio::main]
 async fn main() {

@@ -1,11 +1,10 @@
-use crate::model::{Category, NewCategory, UpdateCategory};
+use crate::model::Category;
 use anyhow::Error;
 use anyhow::Result;
-use futures::future::{ready, BoxFuture};
+use futures::future::BoxFuture;
 use salvo::hyper;
 use salvo::hyper::server::conn::AddrIncoming;
 use salvo::prelude::*;
-use std::future::Future;
 use std::io;
 use std::net::{Ipv4Addr, SocketAddr};
 use std::str::FromStr;
