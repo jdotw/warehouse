@@ -11,7 +11,7 @@ use std::env;
 
 use repository::RepositoryBuilder;
 use service::Service;
-use transport::Transport;
+use transport::TransportBuilder;
 
 #[tokio::main]
 async fn main() {
@@ -22,6 +22,10 @@ async fn main() {
         .connection_string(database_url)
         .build();
     let service = Service::new(repository);
-    let transport = Transport::new(service, "0.0.0.0".to_string(), 7878);
+    let transport = TransportBuilder::new()
+        .service(service)
+        .port(7878)
+        .host("0.0.0.0")
+        .build();
     transport.serve().await
 }
