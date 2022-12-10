@@ -5,7 +5,7 @@ extern crate diesel;
 
 mod model;
 mod repository;
-mod server;
+mod transport;
 
 use anyhow::Error;
 use dotenvy::dotenv;
@@ -15,72 +15,9 @@ use repository::Repository;
 use salvo::prelude::*;
 use std::env;
 use std::thread::available_parallelism;
+use transport::salvo::SalvoTransport;
+use transport::Transport;
 use uuid::Uuid;
-
-#[handler]
-async fn get_categories_canned(res: &mut Response) {
-    let results: [Category; 2] = [
-        Category {
-            id: Uuid::new_v4(),
-            name: String::new(),
-        },
-        Category {
-            id: Uuid::new_v4(),
-            name: String::new(),
-        },
-    ];
-    res.render(Json(results));
-}
-
-#[handler]
-async fn get_categories_synch(res: &mut Response) -> Result<(), Error> {
-    // res.render(Json(results));
-    Ok(())
-}
-
-#[handler]
-async fn create_category(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    // res.render(Json(result));
-    Ok(())
-}
-
-#[handler]
-async fn update_category(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    // res.render(Json(result));
-    Ok(())
-}
-
-#[handler]
-async fn get_category(req: &Request, res: &mut Response) -> Result<(), Error> {
-    // res.render(Json(results));
-    Ok(())
-}
-
-#[handler]
-async fn delete_category(req: &Request, res: &mut Response) -> Result<(), Error> {
-    // res.render(Json(results));
-    Ok(())
-}
-
-async fn serve() {
-    let router = Router::new().push(
-        Router::with_path("categories")
-            .get(get_categories_synch)
-            .post(create_category)
-            .push(
-                Router::with_path("<id>")
-                    .get(get_category)
-                    .patch(update_category)
-                    .delete(delete_category),
-            ),
-    );
-
-    // Server::new(TcpListener::bind("0.0.0.0:7878"))
-    //     .serve(Service::new(router))
-    //     .await;
-
-    server::builder().serve(Service::new(router)).await.unwrap();
-}
 
 #[tokio::main]
 async fn main() {
@@ -107,5 +44,6 @@ async fn main() {
     //     .unwrap();
     // rt.block_on(serve());
 
-    serve().await
+    let transport = SalvoTransport::new("0.0.0.0".to_string(), 7878);
+    transport.serve().await
 }

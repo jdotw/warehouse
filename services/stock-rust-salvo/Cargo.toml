@@ -20,6 +20,7 @@ bb8-diesel = "0.2.1"
 bytes = "1"
 snmalloc-rs = { version = "0.3", features = ["native-cpu","build_cc"] }
 console-subscriber = "*"
+futures = "0.3.25"
 
 [dependencies.uuid]
 version = "1.2.2"
