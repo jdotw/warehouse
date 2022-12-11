@@ -13,8 +13,7 @@ use repository::RepositoryBuilder;
 use service::Service;
 use transport::TransportBuilder;
 
-#[tokio::main]
-async fn main() {
+fn main() {
     console_subscriber::init();
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
@@ -27,5 +26,5 @@ async fn main() {
         .port(7878)
         .host("0.0.0.0")
         .build();
-    transport.serve().await
+    transport.serve_and_await();
 }

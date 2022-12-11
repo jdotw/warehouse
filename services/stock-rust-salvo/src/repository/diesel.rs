@@ -37,7 +37,6 @@ impl Engine for DieselEngine {
     fn get_categories(&self) -> Result<Vec<Category>, Error> {
         let mut connection = self.connect().unwrap();
         let results = dsl::categories
-            .limit(5)
             .load::<Category>(&mut connection)
             .expect("Error loading categories");
         Ok(results)

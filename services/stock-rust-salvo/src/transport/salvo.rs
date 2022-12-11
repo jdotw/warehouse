@@ -4,7 +4,6 @@ use crate::model::{NewCategory, UpdateCategory};
 use crate::service::Service;
 use crate::transport::{Engine, SERVICE};
 use anyhow::{Error, Result};
-use futures::future::BoxFuture;
 use salvo::hyper;
 use salvo::hyper::server::conn::AddrIncoming;
 use salvo::prelude::*;
@@ -23,6 +22,28 @@ fn service() -> &'static Service {
     SERVICE.get().unwrap()
 }
 
+#[tokio::main]
+async fn serve(host: &str, port: u16) {
+    let router = Router::new().push(
+        Router::with_path("categories")
+            .get(get_categories)
+            .post(create_category)
+            .push(
+                Router::with_path("<id>")
+                    .get(get_category)
+                    .patch(update_category)
+                    .delete(delete_category),
+            ),
+    );
+    let addr = SocketAddr::from((Ipv4Addr::from_str(host).unwrap(), port));
+    let listener = reuse_listener(addr).expect("couldn't bind to addr");
+    let incoming = AddrIncoming::from_listener(listener).unwrap();
+    let server = hyper::Server::builder(incoming)
+        .http1_only(true)
+        .tcp_nodelay(true);
+    let _res = server.serve(salvo::Service::new(router)).await;
+}
+
 impl Engine for SalvoEngine {
     fn new(host: String, port: u16) -> Self {
         SalvoEngine {
@@ -30,27 +51,8 @@ impl Engine for SalvoEngine {
             port: port,
         }
     }
-    fn serve(&self) -> BoxFuture<'static, ()> {
-        let router = Router::new().push(
-            Router::with_path("categories")
-                .get(get_categories)
-                .post(create_category)
-                .push(
-                    Router::with_path("<id>")
-                        .get(get_category)
-                        .patch(update_category)
-                        .delete(delete_category),
-                ),
-        );
-        let addr = SocketAddr::from((Ipv4Addr::from_str(&self.host).unwrap(), self.port));
-        let listener = reuse_listener(addr).expect("couldn't bind to addr");
-        let incoming = AddrIncoming::from_listener(listener).unwrap();
-        let server = hyper::Server::builder(incoming)
-            .http1_only(true)
-            .tcp_nodelay(true);
-        Box::pin(async {
-            let _res = server.serve(salvo::Service::new(router)).await;
-        })
+    fn serve_and_await(&self) {
+        serve(self.host.as_str(), self.port);
     }
 }
 
@@ -62,13 +64,10 @@ fn reuse_listener(addr: SocketAddr) -> io::Result<TcpListener> {
 
     #[cfg(unix)]
     {
-        println!("Using set_reuseport");
         if let Err(e) = socket.set_reuseport(true) {
             eprintln!("error setting SO_REUSEPORT: {}", e);
         }
     }
-
-    println!("reuse_listener");
 
     socket.set_reuseaddr(true)?;
     socket.bind(addr)?;

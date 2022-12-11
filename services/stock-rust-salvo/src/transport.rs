@@ -1,8 +1,9 @@
+// use self::actix::ActixEngine;
 use crate::service::Service;
 use crate::transport::salvo::SalvoEngine;
-use futures::future::BoxFuture;
 use once_cell::sync::OnceCell;
 
+pub mod actix;
 pub mod salvo;
 
 pub struct Transport {
@@ -15,12 +16,12 @@ pub trait Engine {
     fn new(host: String, port: u16) -> Self
     where
         Self: Sized;
-    fn serve(&self) -> BoxFuture<'static, ()>;
+    fn serve_and_await(&self);
 }
 
 impl Transport {
-    pub fn serve(&self) -> BoxFuture<'static, ()> {
-        self.engine.serve()
+    pub fn serve_and_await(&self) {
+        self.engine.serve_and_await()
     }
 }
 
@@ -50,6 +51,7 @@ impl TransportBuilder {
     }
     pub fn build(self) -> Transport {
         let engine = SalvoEngine::new(self.host, self.port);
+        // let engine = ActixEngine::new(self.host, self.port);
         Transport {
             engine: Box::new(engine),
         }
