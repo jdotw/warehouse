@@ -5,19 +5,19 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Queryable, Serialize, Deserialize, Clone, Debug)]
+#[derive(Queryable, Serialize, Deserialize, Clone)]
 pub struct Category {
     pub id: Uuid,
     pub name: String,
 }
 
-#[derive(Deserialize, Insertable, Debug)]
+#[derive(Deserialize, Insertable)]
 #[diesel(table_name = categories)]
 pub struct NewCategory {
     pub name: String,
 }
 
-#[derive(Deserialize, AsChangeset, Debug)]
+#[derive(Deserialize, AsChangeset)]
 #[diesel(table_name = categories)]
 pub struct UpdateCategory {
     pub name: String,
