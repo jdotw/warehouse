@@ -5,6 +5,7 @@ use anyhow::Error;
 use uuid::Uuid;
 
 pub mod diesel;
+pub mod sea;
 
 pub trait Engine {
     fn new(connection_string: String) -> Self
