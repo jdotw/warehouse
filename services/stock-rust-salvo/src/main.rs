@@ -1,6 +1,7 @@
 // #[global_allocator]
 // static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
+mod entity;
 mod model;
 mod repository;
 mod service;
@@ -14,7 +15,6 @@ use service::Service;
 use transport::TransportBuilder;
 
 fn main() {
-    console_subscriber::init();
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let repository = RepositoryBuilder::new()

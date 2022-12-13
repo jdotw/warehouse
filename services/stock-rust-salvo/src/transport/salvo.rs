@@ -30,6 +30,7 @@ fn service() -> &'static Service {
 
 #[tokio::main]
 async fn serve(host: &str, port: u16) {
+    console_subscriber::init();
     let db_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
     let mut opt = ConnectOptions::new(db_url);
     opt.max_connections(100);
