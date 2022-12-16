@@ -1,4 +1,4 @@
-package main
+package util
 
 func ok(err error) {
 	if err != nil {
