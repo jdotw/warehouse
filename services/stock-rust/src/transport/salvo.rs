@@ -1,16 +1,12 @@
 extern crate salvo;
 
-use crate::model::{Category, NewCategory, UpdateCategory};
-use crate::repository::sea::query::Query;
+use crate::model::{NewCategory, UpdateCategory};
 use crate::service::Service;
 use crate::transport::{Engine, SERVICE};
 use anyhow::{Error, Result};
-use once_cell::sync::OnceCell;
 use salvo::hyper;
 use salvo::hyper::server::conn::AddrIncoming;
 use salvo::prelude::*;
-use sea_orm::{ConnectOptions, Database, DbConn};
-use std::env;
 use std::io;
 use std::net::{Ipv4Addr, SocketAddr};
 use std::str::FromStr;
@@ -22,8 +18,6 @@ pub struct SalvoEngine {
     port: u16,
 }
 
-pub static SEADB: OnceCell<DbConn> = OnceCell::new();
-
 fn service() -> &'static Service {
     SERVICE.get().unwrap()
 }
@@ -31,14 +25,9 @@ fn service() -> &'static Service {
 #[tokio::main]
 async fn serve(host: &str, port: u16) {
     console_subscriber::init();
-    let db_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
-    let mut opt = ConnectOptions::new(db_url);
-    opt.max_connections(100);
-    let conn = Database::connect(opt).await.unwrap();
-    let _setres = SEADB.set(conn);
     let router = Router::new().push(
         Router::with_path("categories")
-            .get(get_categories_canned)
+            .get(get_categories)
             .post(create_category)
             .push(
                 Router::with_path("<id>")
@@ -88,31 +77,9 @@ fn reuse_listener(addr: SocketAddr) -> io::Result<TcpListener> {
 
 // Handlers
 
-fn dbconn() -> &'static DbConn {
-    unsafe { SEADB.get_unchecked() }
-}
-
 #[handler]
 async fn get_categories(res: &mut Response) -> Result<(), Error> {
-    // let result = service().get_categories().unwrap();
-    let result = Query::find_categories_in_page(dbconn(), 1, 64)
-        .await
-        .unwrap();
-    res.render(Json(result.0));
-    Ok(())
-}
-
-#[handler]
-async fn get_categories_canned(res: &mut Response) -> Result<(), Error> {
-    let mut result = Vec::with_capacity(2);
-    result.push(Category {
-        id: Uuid::new_v4(),
-        name: "Canned 1".to_string(),
-    });
-    result.push(Category {
-        id: Uuid::new_v4(),
-        name: "Canned 2".to_string(),
-    });
+    let result = service().get_categories().unwrap();
     res.render(Json(result));
     Ok(())
 }

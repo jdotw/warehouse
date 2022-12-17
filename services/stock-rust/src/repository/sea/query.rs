@@ -1,4 +1,4 @@
-use crate::entity::{category, category::Entity as Category};
+use crate::repository::sea::entity::{category, category::Entity as Category};
 use sea_orm::*;
 use uuid::Uuid;
 

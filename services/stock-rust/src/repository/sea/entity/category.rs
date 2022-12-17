@@ -1,3 +1,4 @@
+use crate::model::Category;
 use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -13,5 +14,14 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {}
+
+impl Model {
+    pub fn to_category(&self) -> Category {
+        Category {
+            id: self.id.clone(),
+            name: self.name.clone(),
+        }
+    }
+}
 
 impl ActiveModelBehavior for ActiveModel {}

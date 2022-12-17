@@ -1,11 +1,12 @@
 use crate::model::{Category, NewCategory, UpdateCategory};
 use crate::repository::diesel::DieselEngine;
+// use crate::repository::sea::SeaEngine;
 
 use anyhow::Error;
 use uuid::Uuid;
 
 pub mod diesel;
-pub mod sea;
+// pub mod sea;
 
 pub trait Engine {
     fn new(connection_string: String) -> Self
@@ -64,6 +65,7 @@ impl RepositoryBuilder {
     pub fn build(self) -> Repository {
         let conn_string = self.connection_string.clone();
         let engine = DieselEngine::new(conn_string.unwrap());
+        // let engine = SeaEngine::new(conn_string.unwrap());
 
         Repository {
             engine: Box::new(engine),

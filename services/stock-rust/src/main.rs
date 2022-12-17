@@ -1,7 +1,6 @@
 // #[global_allocator]
 // static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-mod entity;
 mod model;
 mod repository;
 mod service;
