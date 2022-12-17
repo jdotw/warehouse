@@ -5,13 +5,15 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/jdotw/warehouse/services/stock-go/internal/service"
+	"github.com/jdotw/warehouse/services/stock-go/internal/util"
 )
 
 type fiberTransport struct {
-	s Service
+	s service.Service
 }
 
-func NewFiberTransport(s Service) Transport {
+func NewFiberTransport(s service.Service) Transport {
 	return fiberTransport{
 		s: s,
 	}
@@ -19,7 +21,7 @@ func NewFiberTransport(s Service) Transport {
 
 func (t fiberTransport) getCategories(c *fiber.Ctx) error {
 	v, err := t.s.GetCategories(context.Background())
-	ok(err)
+	util.Ok(err)
 	return c.JSON(v)
 }
 

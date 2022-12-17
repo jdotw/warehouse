@@ -6,25 +6,28 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/jdotw/warehouse/services/stock-go/internal/service"
+	"github.com/jdotw/warehouse/services/stock-go/internal/util"
 )
 
 type GetCategoriesHandler struct {
-	s Service
+	s service.Service
 }
 
 func (h GetCategoriesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	v, err := h.s.GetCategories(context.Background())
-	ok(err)
+	util.Ok(err)
 	json, err := json.Marshal(v)
-	ok(err)
+	util.Ok(err)
 	fmt.Fprint(w, string(json))
 }
 
 type httpTransport struct {
-	s Service
+	s service.Service
 }
 
-func NewHTTPTransport(s Service) Transport {
+func NewHTTPTransport(s service.Service) Transport {
 	return httpTransport{
 		s: s,
 	}

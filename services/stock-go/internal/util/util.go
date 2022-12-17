@@ -1,6 +1,6 @@
 package util
 
-func ok(err error) {
+func Ok(err error) {
 	if err != nil {
 		panic(err)
 	}

@@ -1,4 +1,4 @@
-module github.com/jdotw/warehouse/services/stock-go-http
+module github.com/jdotw/warehouse/services/stock-go
 
 go 1.19
 

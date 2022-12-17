@@ -5,13 +5,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jdotw/warehouse/services/stock-go/internal/service"
+	"github.com/jdotw/warehouse/services/stock-go/internal/util"
 )
 
 type ginTransport struct {
-	s Service
+	s service.Service
 }
 
-func NewGinTransport(s Service) Transport {
+func NewGinTransport(s service.Service) Transport {
 	return ginTransport{
 		s: s,
 	}
@@ -19,7 +21,7 @@ func NewGinTransport(s Service) Transport {
 
 func (t ginTransport) getCategories(c *gin.Context) {
 	v, err := t.s.GetCategories(context.Background())
-	ok(err)
+	util.Ok(err)
 	c.JSON(http.StatusOK, v)
 }
 
